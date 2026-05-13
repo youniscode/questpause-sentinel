@@ -21,6 +21,10 @@ async function generateResponse(systemPrompt, userMessage) {
     return callAnthropic(key, model, systemPrompt, userMessage, maxChars);
   }
 
+  if (provider === 'openrouter') {
+    return callOpenRouter(key, model, systemPrompt, userMessage, maxChars);
+  }
+
   logger.warn(`Unknown AI provider: ${provider}`);
   return null;
 }
@@ -86,6 +90,46 @@ async function callAnthropic(apiKey, model, systemPrompt, userMessage, maxChars)
   const data = await res.json();
   const content = data.content?.[0]?.text || '';
   return content.slice(0, maxChars);
+}
+
+async function callOpenRouter(apiKey, model, systemPrompt, userMessage, maxChars) {
+  try {
+    const { default: fetch } = await import('node-fetch');
+
+    const body = {
+      model: model || 'openrouter/free',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+      max_tokens: Math.min(Math.ceil(maxChars / 2), 2048),
+      temperature: 0.6,
+    };
+
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://questpause.jonascode.com',
+        'X-Title': 'QUESTPAUSE Sentinel',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      logger.error(`OpenRouter API error ${res.status}: ${errText}`);
+      return null;
+    }
+
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content || '';
+    return content.slice(0, maxChars);
+  } catch (err) {
+    logger.error(`OpenRouter request failed: ${err.message}`);
+    return null;
+  }
 }
 
 module.exports = { generateResponse };

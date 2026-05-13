@@ -41,10 +41,16 @@ async function handleMessage(message) {
     return;
   }
 
-  const response = await aiClient.generateResponse(systemPrompt.prompt, text);
+  let response;
+  try {
+    response = await aiClient.generateResponse(systemPrompt.prompt, text);
+  } catch (err) {
+    logger.warn(`AI generateResponse threw for ${message.author.tag}: ${err.message}`);
+    return;
+  }
 
   if (!response) {
-    logger.info(`AI response skipped for ${message.author.tag} — provider not configured`);
+    logger.info(`AI response skipped for ${message.author.tag} — check provider config or logs`);
     return;
   }
 
