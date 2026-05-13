@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 9)
+## Current Commands (Stage 10)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -24,6 +24,12 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/resolve-report` | Resolve an open player report | Yes |
 | `/watch-player` | Add a player to the watchlist | Yes |
 | `/unwatch-player` | Remove a player from the watchlist | Yes |
+
+## Active Systems
+
+| System | Description |
+|--------|-------------|
+| Keyword Guard | Monitors guild text channels for serious keywords and alerts admins via `SENTINEL_ALERT_CHANNEL_ID` |
 
 ## Storage
 
@@ -43,7 +49,8 @@ Current collections:
    - `DISCORD_TOKEN` — bot token from Discord Developer Portal
    - `DISCORD_CLIENT_ID` — application client ID
    - `DISCORD_GUILD_ID` — set to your dev server ID for fast guild command deployment (leave empty for global commands)
-   - `SENTINEL_REPORT_CHANNEL_ID` — channel ID for player report alerts (optional)
+    - `SENTINEL_REPORT_CHANNEL_ID` — channel ID for player report alerts (optional)
+    - `SENTINEL_ALERT_CHANNEL_ID` — channel ID for keyword guard alerts (optional)
 4. `npm run deploy-commands` — register slash commands with Discord
 5. `npm start` — launch the bot
 
@@ -54,7 +61,8 @@ src/
 ├── index.js                         # Entry point
 ├── events/
 │   ├── ready.js                     # Bot ready event
-│   └── interactionCreate.js         # Slash command handler
+│   ├── interactionCreate.js         # Slash command handler
+│   └── messageCreate.js             # Keyword guard monitor
 ├── commands/
 │   ├── sentinelStatus.js            # /sentinel-status
 │   ├── logIncident.js               # /log-incident (admin)
@@ -71,7 +79,9 @@ src/
 │       ├── incidentLogger.js        # Incident CRUD logic
 │       ├── warningLogger.js         # Warning CRUD logic
 │       ├── reportLogger.js          # Report CRUD logic
-│       └── watchlistLogger.js       # Watchlist CRUD logic
+│       ├── watchlistLogger.js       # Watchlist CRUD logic
+│       ├── keywordGuard.js          # Serious keyword detection
+│       └── alerts.js                # Admin alert sender
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -82,7 +92,8 @@ src/
 │       ├── reports.json             # Player report records
 │       └── watchlist.json           # Player watchlist records
 ├── config/
-│   └── index.js                     # Version and environment config
+│   ├── index.js                     # Version and environment config
+│   └── keywords.js                  # Serious keyword list
 └── utils/
     └── logger.js                    # Logging utility
 ```
@@ -97,8 +108,6 @@ src/
 ## Future Planned Features
 
 The following are planned but not yet active:
-- Serious keyword guard
-- Admin alerts
 - Game personas
 - Trigger replies
 - Ambient messages

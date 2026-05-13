@@ -17,11 +17,16 @@ const watchPlayer = require('./commands/watchPlayer');
 const unwatchPlayer = require('./commands/unwatchPlayer');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
+const messageCreate = require('./events/messageCreate');
 
 interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer]);
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 client.commands = new Collection();
@@ -43,6 +48,7 @@ async function init() {
 
     client.once('clientReady', () => readyEvent.execute(client));
     client.on('interactionCreate', (i) => interactionCreate.execute(i));
+    client.on('messageCreate', (m) => messageCreate.execute(m));
 
     const token = process.env.DISCORD_TOKEN;
     if (!token) {

@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 9)
+# QUESTPAUSE Sentinel — Project Map (Stage 10)
 
 ```
 questpause-sentinel/
@@ -14,7 +14,8 @@ questpause-sentinel/
 │   ├── index.js                         # Entry point
 │   ├── events/
 │   │   ├── ready.js                     # Bot ready event
-│   │   └── interactionCreate.js         # Slash command handler
+│   │   ├── interactionCreate.js         # Slash command handler
+│   │   └── messageCreate.js             # Keyword guard monitor
 │   ├── commands/
 │   │   ├── sentinelStatus.js            # /sentinel-status
 │   │   ├── reportPlayer.js              # /report-player
@@ -31,7 +32,9 @@ questpause-sentinel/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
 │   │       ├── warningLogger.js         # Warning CRUD logic
 │   │       ├── reportLogger.js          # Report CRUD logic
-│   │       └── watchlistLogger.js       # Watchlist CRUD logic
+│   │       ├── watchlistLogger.js       # Watchlist CRUD logic
+│   │       ├── keywordGuard.js          # Serious keyword detection
+│   │       └── alerts.js                # Admin alert sender
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -42,7 +45,8 @@ questpause-sentinel/
 │   │       ├── reports.json             # Player report records
 │   │       └── watchlist.json           # Player watchlist records
 │   ├── config/
-│   │   └── index.js                     # Version and environment config
+│   │   ├── index.js                     # Version and environment config
+│   │   └── keywords.js                  # Serious keyword list
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
@@ -74,6 +78,18 @@ questpause-sentinel/
 - Game choices: Valheim, Project Zomboid, ICARUS, Windrose, Minecraft, 7 Days to Die, Discord, Network
 - Severity choices: Low, Medium, High, Critical
 
+## Stage 10 Additions
+
+- Serious Keyword Guard — `keywordGuard.js` monitors all guild text messages for 21 serious keywords
+- `messageCreate.js` event handler wires keyword detection into the bot's event pipeline
+- `alerts.js` — sends admin alert embeds to `SENTINEL_ALERT_CHANNEL_ID` if configured
+- `config/keywords.js` — centralized keyword list and cooldown configuration
+- Cooldown protection: 10-minute cooldown per (channel + keyword) and per author to prevent spam alerts
+- Admin alert embed includes: trigger keyword, author, channel, message link, message excerpt, timestamp, and recommended action steps
+- No automatic punishment, no public reply, no incident/warning creation — human admins review and decide
+- Bot ignores DMs and other bot messages
+- Added `GuildMessages` and `MessageContent` intents to client
+
 ## Environment Variables
 
 | Variable | Description |
@@ -82,3 +98,4 @@ questpause-sentinel/
 | `DISCORD_CLIENT_ID` | Discord application client ID |
 | `DISCORD_GUILD_ID` | Guild ID for dev (empty = global commands) |
 | `SENTINEL_REPORT_CHANNEL_ID` | Channel ID for report alerts (optional) |
+| `SENTINEL_ALERT_CHANNEL_ID` | Channel ID for keyword guard alerts (optional) |
