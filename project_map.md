@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 12)
+# QUESTPAUSE Sentinel — Project Map (Stage 13)
 
 ```
 questpause-sentinel/
@@ -113,12 +113,20 @@ questpause-sentinel/
 - `config/personas.js` — defines 6 personas (Knox Radio, The Old Raven, Orbital Handler, The Quartermaster, The Block Keeper, Bunker Broadcast)
 - `config/triggers.js` — 30+ harmless trigger keywords across 6 games, each with 3 varied reply options
 - `config/channelGames.js` — parses `*_CHANNEL_IDS` env vars into channelId→gameName map
-- `modules/personas/personaRouter.js` — accepts `channelId` param; if mapped to a game, only that game's triggers are checked; unmapped channels fall back to any-game matching
+- `modules/personas/personaRouter.js` — accepts `channelId` param; only checks triggers for the mapped game; unmapped channels return null (no persona reply)
 - `modules/personas/triggerReplies.js` — passes `message.channel.id` to `matchTrigger`
 - `messageCreate.js` now calls both `keywordGuard.checkMessage()` and `triggerReplies.checkForTrigger()` in sequence
 - Serious keyword guard takes priority — if a serious keyword is present, persona reply is suppressed
 - Respects Stage 11 channel allow/block config, ignores bots and DMs
 - Controlled by `ENABLE_PERSONA_REPLIES=true`, `PERSONA_REPLY_COOLDOWN_MINUTES=15`, `PERSONA_PLAYER_COOLDOWN_MINUTES=30`
+
+## Stage 13 Additions
+
+- Per-game persona channel mapping — persona replies only trigger in explicitly mapped channels
+- `personaRouter.js` no longer falls back to all-game matching for unmapped channels; returns `null` if no game is mapped for the channel
+- `channelGames.js` now exports `gameChannelCounts` for startup logging
+- Startup log shows per-game channel counts (e.g., `Valheim: 2, Project Zomboid: 1`)
+- Persona replies disabled in unmapped channels; serious keyword guard continues to work everywhere
 
 ## Environment Variables
 

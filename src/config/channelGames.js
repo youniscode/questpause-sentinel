@@ -13,12 +13,15 @@ const ENV_TO_GAME = {
 };
 
 const channelToGame = new Map();
+const gameChannelCounts = {};
 
 for (const [envVar, game] of Object.entries(ENV_TO_GAME)) {
+  gameChannelCounts[game] = 0;
   const ids = parseIds(process.env[envVar]);
   for (const id of ids) {
     channelToGame.set(id, game);
+    gameChannelCounts[game]++;
   }
 }
 
-module.exports = { channelToGame };
+module.exports = { channelToGame, gameChannelCounts };

@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 12)
+## Current Commands (Stage 13)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -62,7 +62,7 @@ Assign Discord channels to specific game personas so trigger keywords only fire 
 | `MINECRAFT_CHANNEL_IDS` | The Block Keeper |
 | `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` | Bunker Broadcast |
 
-Each accepts comma-separated Discord channel IDs. If a channel is mapped to a game, only that game's trigger keywords and persona will respond. Unmapped channels will match any persona (first keyword match wins).
+Each accepts comma-separated Discord channel IDs. Persona replies only trigger in mapped channels. If a channel is not mapped to any game, persona replies will not fire (serious keyword guard still works).
 
 ## Storage
 

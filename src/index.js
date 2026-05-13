@@ -49,6 +49,17 @@ async function init() {
     const channelConfig = require('./config/channels');
     logger.info(`Channel config — monitored: ${channelConfig.monitoredChannelIds.size}, blocked channels: ${channelConfig.blockedChannelIds.size}, blocked categories: ${channelConfig.blockedCategoryIds.size}`);
 
+    const { gameChannelCounts } = require('./config/channelGames');
+    const personaSummary = Object.entries(gameChannelCounts)
+      .filter(([, count]) => count > 0)
+      .map(([game, count]) => `${game}: ${count}`)
+      .join(', ');
+    if (personaSummary) {
+      logger.info(`Persona channels — ${personaSummary}`);
+    } else {
+      logger.info('Persona channels — none configured');
+    }
+
     client.once('clientReady', () => readyEvent.execute(client));
     client.on('interactionCreate', (i) => interactionCreate.execute(i));
     client.on('messageCreate', (m) => messageCreate.execute(m));

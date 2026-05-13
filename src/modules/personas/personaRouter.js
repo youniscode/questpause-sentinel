@@ -7,28 +7,16 @@ function matchTrigger(content, channelId) {
 
   const explicitGame = channelId ? channelToGame.get(channelId) : null;
 
-  if (explicitGame) {
-    const config = TRIGGER_MAP[explicitGame];
-    if (config) {
-      for (const keyword of config.keywords) {
-        if (lower.includes(keyword)) {
-          const replies = config.replies[keyword];
-          if (replies && replies.length > 0) {
-            return { game: explicitGame, keyword, replies };
-          }
-        }
-      }
-    }
-    return null;
-  }
+  if (!explicitGame) return null;
 
-  for (const [game, config] of Object.entries(TRIGGER_MAP)) {
-    for (const keyword of config.keywords) {
-      if (lower.includes(keyword)) {
-        const replies = config.replies[keyword];
-        if (replies && replies.length > 0) {
-          return { game, keyword, replies };
-        }
+  const config = TRIGGER_MAP[explicitGame];
+  if (!config) return null;
+
+  for (const keyword of config.keywords) {
+    if (lower.includes(keyword)) {
+      const replies = config.replies[keyword];
+      if (replies && replies.length > 0) {
+        return { game: explicitGame, keyword, replies };
       }
     }
   }
