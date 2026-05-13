@@ -87,6 +87,9 @@ async function init() {
     const ambientState = require('./modules/personas/ambientState');
     ambientState.init();
 
+    const aiSettings = require('./modules/ai/aiSettings');
+    aiSettings.init();
+
     const { gameChannelCounts } = require('./config/channelGames');
     const personaSummary = Object.entries(gameChannelCounts)
       .filter(([, count]) => count > 0)

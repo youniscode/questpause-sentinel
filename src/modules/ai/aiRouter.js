@@ -1,5 +1,6 @@
 const logger = require('../../utils/logger');
 const aiConfig = require('../../config/ai');
+const aiSettings = require('./aiSettings');
 const safetyRouter = require('./safetyRouter');
 const aiClient = require('./aiClient');
 const systemPrompt = require('./sentinelSystemPrompt');
@@ -22,7 +23,7 @@ function setCooldown(userId) {
 }
 
 async function handleMessage(message) {
-  if (!aiConfig.enabled) return;
+  if (!aiSettings.isEnabled()) return;
   if (message.author.bot) return;
   if (!isChannelAllowed(message.channel.id)) return;
 

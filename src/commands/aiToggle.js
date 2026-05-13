@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const aiSettings = require('../modules/ai/aiSettings');
 
 const data = new SlashCommandBuilder()
   .setName('ai-toggle')
@@ -11,13 +12,12 @@ const data = new SlashCommandBuilder()
 async function execute(interaction) {
   const enabled = interaction.options.getBoolean('enabled', true);
 
-  process.env.AI_SENTINEL_ENABLED = enabled ? 'true' : 'false';
+  aiSettings.setEnabled(enabled);
 
   const embed = {
     color: enabled ? 0x00ff88 : 0xffaa00,
     title: '🤖 AI Sentinel Toggled',
     description: `AI Interactive Sentinel is now **${enabled ? 'enabled' : 'disabled'}**.`,
-    footer: { text: 'Note: This change applies until the bot restarts. Edit .env to persist.' },
     timestamp: new Date().toISOString(),
   };
 

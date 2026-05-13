@@ -1,13 +1,15 @@
 const { SlashCommandBuilder } = require('discord.js');
 const aiConfig = require('../config/ai');
+const aiSettings = require('../modules/ai/aiSettings');
 
 const data = new SlashCommandBuilder()
   .setName('ai-status')
   .setDescription('Show AI Interactive Sentinel status');
 
 async function execute(interaction) {
+  const enabled = aiSettings.isEnabled();
   const fields = [
-    { name: 'Enabled', value: aiConfig.enabled ? '✅ Yes' : '❌ No', inline: true },
+    { name: 'Enabled', value: enabled ? '✅ Yes' : '❌ No', inline: true },
     { name: 'Provider', value: aiConfig.provider || 'Not configured', inline: true },
     { name: 'Model', value: aiConfig.model || 'Not set', inline: true },
     { name: 'AI Channels', value: `${aiConfig.channelIds.size} channel(s)`, inline: true },
@@ -19,7 +21,7 @@ async function execute(interaction) {
   const apiKeySet = !!aiConfig.apiKey;
 
   const embed = {
-    color: aiConfig.enabled && apiKeySet ? 0x00ff88 : 0xffaa00,
+    color: enabled && apiKeySet ? 0x00ff88 : 0xffaa00,
     title: '🤖 AI Interactive Sentinel',
     fields,
     timestamp: new Date().toISOString(),
