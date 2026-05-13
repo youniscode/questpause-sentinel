@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 8)
+# QUESTPAUSE Sentinel — Project Map (Stage 9)
 
 ```
 questpause-sentinel/
@@ -23,12 +23,15 @@ questpause-sentinel/
 │   │   ├── resolveIncident.js           # /resolve-incident (admin)
 │   │   ├── addWarning.js                # /add-warning (admin)
 │   │   ├── resolveWarning.js            # /resolve-warning (admin)
-│   │   └── resolveReport.js             # /resolve-report (admin)
+│   │   ├── resolveReport.js             # /resolve-report (admin)
+│   │   ├── watchPlayer.js               # /watch-player (admin)
+│   │   └── unwatchPlayer.js             # /unwatch-player (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
 │   │       ├── warningLogger.js         # Warning CRUD logic
-│   │       └── reportLogger.js          # Report CRUD logic
+│   │       ├── reportLogger.js          # Report CRUD logic
+│   │       └── watchlistLogger.js       # Watchlist CRUD logic
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -36,7 +39,8 @@ questpause-sentinel/
 │   │       ├── .gitkeep
 │   │       ├── incidents.json           # Incident records
 │   │       ├── warnings.json            # Warning records
-│   │       └── reports.json             # Player report records
+│   │       ├── reports.json             # Player report records
+│   │       └── watchlist.json           # Player watchlist records
 │   ├── config/
 │   │   └── index.js                     # Version and environment config
 │   └── utils/
@@ -58,6 +62,17 @@ questpause-sentinel/
 - Outcome choices: No Action, Duplicate, Evidence Insufficient, Resolved Informally, Warning Issued, Converted To Incident
 - Optional `linked-incident-id` field to associate resolved report with an existing incident
 - No automatic incident or warning creation — human admins decide separately
+
+## Stage 9 Additions
+
+- `/watch-player` command (admin) — add a player to the watchlist with game, reason, and severity
+- `/unwatch-player` command (admin) — remove a player from the watchlist with removal reason
+- `watchlistLogger.js` — watchlist CRUD with sequential QP-WATCH-XXXX IDs
+- Watchlist saved to `watchlist.json` (gitignored via existing `src/storage/data/*.json` pattern)
+- `/player-history` now shows Active Watchlist count and latest 5 watchlist entries
+- Watch record fields: id, player, game, reason, severity, status (Active/Removed), createdBy, createdAt, removedBy, removedAt, removalReason
+- Game choices: Valheim, Project Zomboid, ICARUS, Windrose, Minecraft, 7 Days to Die, Discord, Network
+- Severity choices: Low, Medium, High, Critical
 
 ## Environment Variables
 

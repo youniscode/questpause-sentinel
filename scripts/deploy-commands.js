@@ -11,6 +11,8 @@ const commands = [
   require('../src/commands/resolveWarning'),
   require('../src/commands/reportPlayer'),
   require('../src/commands/resolveReport'),
+  require('../src/commands/watchPlayer'),
+  require('../src/commands/unwatchPlayer'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

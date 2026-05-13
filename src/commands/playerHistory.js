@@ -17,11 +17,13 @@ async function execute(interaction) {
 
   const allIncidents = (await store.read('incidents')) || [];
   const allWarnings = (await store.read('warnings')) || [];
+  const allWatchlist = (await store.read('watchlist')) || [];
 
   const incMatches = allIncidents.filter((inc) => inc.player.toLowerCase().includes(query));
   const warnMatches = allWarnings.filter((w) => w.player.toLowerCase().includes(query));
+  const watchMatches = allWatchlist.filter((w) => w.player.toLowerCase().includes(query));
 
-  if (incMatches.length === 0 && warnMatches.length === 0) {
+  if (incMatches.length === 0 && warnMatches.length === 0 && watchMatches.length === 0) {
     await interaction.editReply({
       content: `No history found for \`${rawPlayer}\`.`,
     });
@@ -32,6 +34,7 @@ async function execute(interaction) {
   const resolvedCount = incMatches.filter((i) => i.status === 'Resolved').length;
   const activeWarnings = warnMatches.filter((w) => w.status === 'Active').length;
   const resolvedWarnings = warnMatches.filter((w) => w.status === 'Resolved').length;
+  const activeWatchCount = watchMatches.filter((w) => w.status === 'Active').length;
 
   const sortedInc = [...incMatches].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
@@ -53,6 +56,7 @@ async function execute(interaction) {
       { name: 'Resolved', value: String(resolvedCount), inline: true },
       { name: 'Active Warnings', value: String(activeWarnings), inline: true },
       { name: 'Resolved Warnings', value: String(resolvedWarnings), inline: true },
+      { name: 'Active Watchlist', value: String(activeWatchCount), inline: true },
     )
     .setTimestamp();
 
@@ -74,6 +78,20 @@ async function execute(interaction) {
       })
       .join('\n');
     embed.addFields({ name: `Latest ${latestWarn.length} Warnings`, value: warnList || 'None', inline: false });
+  }
+
+  if (watchMatches.length > 0) {
+    const sortedWatch = [...watchMatches].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
+    const latestWatch = sortedWatch.slice(0, 5);
+    const watchList = latestWatch
+      .map((w) => {
+        const date = new Date(w.createdAt).toUTCString();
+        return `\`${w.id}\` — ${w.game} — [${w.severity}] — ${w.status} — ${date} — ${w.reason.slice(0, 80)}`;
+      })
+      .join('\n');
+    embed.addFields({ name: `Latest ${latestWatch.length} Watchlist Entries`, value: watchList || 'None', inline: false });
   }
 
   await interaction.editReply({ embeds: [embed] });

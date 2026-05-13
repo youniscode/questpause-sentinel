@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 8)
+## Current Commands (Stage 9)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -22,6 +22,8 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/add-warning` | Issue a warning to a player | Yes |
 | `/resolve-warning` | Resolve an active warning | Yes |
 | `/resolve-report` | Resolve an open player report | Yes |
+| `/watch-player` | Add a player to the watchlist | Yes |
+| `/unwatch-player` | Remove a player from the watchlist | Yes |
 
 ## Storage
 
@@ -31,6 +33,7 @@ Current collections:
 - `incidents.json` — incident records
 - `warnings.json` — warning records
 - `reports.json` — player report records
+- `watchlist.json` — player watchlist records
 
 ## Setup
 
@@ -60,12 +63,15 @@ src/
 │   ├── addWarning.js                # /add-warning (admin)
 │   ├── resolveWarning.js            # /resolve-warning (admin)
 │   ├── reportPlayer.js              # /report-player
-│   └── resolveReport.js             # /resolve-report (admin)
+│   ├── resolveReport.js             # /resolve-report (admin)
+│   ├── watchPlayer.js               # /watch-player (admin)
+│   └── unwatchPlayer.js             # /unwatch-player (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
 │       ├── warningLogger.js         # Warning CRUD logic
-│       └── reportLogger.js          # Report CRUD logic
+│       ├── reportLogger.js          # Report CRUD logic
+│       └── watchlistLogger.js       # Watchlist CRUD logic
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -73,7 +79,8 @@ src/
 │       ├── .gitkeep
 │       ├── incidents.json           # Incident records
 │       ├── warnings.json            # Warning records
-│       └── reports.json             # Player report records
+│       ├── reports.json             # Player report records
+│       └── watchlist.json           # Player watchlist records
 ├── config/
 │   └── index.js                     # Version and environment config
 └── utils/
@@ -90,7 +97,6 @@ src/
 ## Future Planned Features
 
 The following are planned but not yet active:
-- Watchlist
 - Serious keyword guard
 - Admin alerts
 - Game personas

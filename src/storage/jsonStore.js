@@ -8,6 +8,7 @@ const collections = {
   incidents: { file: 'incidents.json', default: [] },
   warnings: { file: 'warnings.json', default: [] },
   reports: { file: 'reports.json', default: [] },
+  watchlist: { file: 'watchlist.json', default: [] },
 };
 
 const cache = {};
