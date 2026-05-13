@@ -5,6 +5,7 @@ const logger = require('../src/utils/logger');
 const commands = [
   require('../src/commands/sentinelStatus'),
   require('../src/commands/logIncident'),
+  require('../src/commands/playerHistory'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

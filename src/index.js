@@ -7,10 +7,11 @@ const storeInterface = require('./storage/storeInterface');
 const jsonStore = require('./storage/jsonStore');
 const sentinelStatus = require('./commands/sentinelStatus');
 const logIncident = require('./commands/logIncident');
+const playerHistory = require('./commands/playerHistory');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory]);
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -19,6 +20,7 @@ const client = new Client({
 client.commands = new Collection();
 client.commands.set(sentinelStatus.data.name, sentinelStatus);
 client.commands.set(logIncident.data.name, logIncident);
+client.commands.set(playerHistory.data.name, playerHistory);
 
 async function init() {
   try {

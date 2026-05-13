@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 2)
+# QUESTPAUSE Sentinel — Project Map (Stage 3)
 
 ```
 questpause-sentinel/
@@ -17,7 +17,8 @@ questpause-sentinel/
 │   │   └── interactionCreate.js         # Slash command handler
 │   ├── commands/
 │   │   ├── sentinelStatus.js            # /sentinel-status
-│   │   └── logIncident.js               # /log-incident (admin)
+│   │   ├── logIncident.js               # /log-incident (admin)
+│   │   └── playerHistory.js             # /player-history
 │   ├── modules/
 │   │   └── moderation/
 │   │       └── incidentLogger.js        # Incident create/read logic
@@ -33,12 +34,10 @@ questpause-sentinel/
 │       └── logger.js                    # Logging utility
 ```
 
-## Stage 2 Additions
+## Stage 3 Additions
 
-- JSON storage layer with abstract interface (swappable for SQLite later)
-- `/log-incident` admin command with incident logging to file
-- Incident ID format: `QP-INC-XXXX`
-- Admin check via `Administrator` permission flag
+- `/player-history` command — search incident history by player name (case-insensitive)
+- Ephemeral reply with totals (open/resolved), latest 5 incidents, empty-state message
 
 ## Environment Variables
 

@@ -16,6 +16,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 |---------|-------------|-------|
 | `/sentinel-status` | Display Sentinel bot status and stats | No |
 | `/log-incident` | Log a new incident | Yes |
+| `/player-history` | View incident history for a player | No |
 
 *Additional commands (player reports, warnings, watchlist) coming soon.*
 
