@@ -10,11 +10,12 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 6)
+## Current Commands (Stage 7)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
 | `/sentinel-status` | Display Sentinel bot status and stats | No |
+| `/report-player` | Report a player for admin review | No |
 | `/log-incident` | Log a new incident | Yes |
 | `/player-history` | View incident and warning history for a player | No |
 | `/resolve-incident` | Resolve an open incident | Yes |
@@ -28,6 +29,7 @@ Data is stored as JSON files under `src/storage/data/`. The storage layer uses a
 Current collections:
 - `incidents.json` — incident records
 - `warnings.json` — warning records
+- `reports.json` — player report records
 
 ## Setup
 
@@ -37,6 +39,7 @@ Current collections:
    - `DISCORD_TOKEN` — bot token from Discord Developer Portal
    - `DISCORD_CLIENT_ID` — application client ID
    - `DISCORD_GUILD_ID` — set to your dev server ID for fast guild command deployment (leave empty for global commands)
+   - `SENTINEL_REPORT_CHANNEL_ID` — channel ID for player report alerts (optional)
 4. `npm run deploy-commands` — register slash commands with Discord
 5. `npm start` — launch the bot
 
@@ -54,18 +57,21 @@ src/
 │   ├── playerHistory.js             # /player-history
 │   ├── resolveIncident.js           # /resolve-incident (admin)
 │   ├── addWarning.js                # /add-warning (admin)
-│   └── resolveWarning.js            # /resolve-warning (admin)
+│   ├── resolveWarning.js            # /resolve-warning (admin)
+│   └── reportPlayer.js              # /report-player
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
-│       └── warningLogger.js         # Warning CRUD logic
+│       ├── warningLogger.js         # Warning CRUD logic
+│       └── reportLogger.js          # Report CRUD logic
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
 │   └── data/
 │       ├── .gitkeep
 │       ├── incidents.json           # Incident records
-│       └── warnings.json            # Warning records
+│       ├── warnings.json            # Warning records
+│       └── reports.json             # Player report records
 ├── config/
 │   └── index.js                     # Version and environment config
 └── utils/
@@ -82,7 +88,6 @@ src/
 ## Future Planned Features
 
 The following are planned but not yet active:
-- Player reports
 - Watchlist
 - Serious keyword guard
 - Admin alerts

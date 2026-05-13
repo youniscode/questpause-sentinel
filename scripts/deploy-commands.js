@@ -9,6 +9,7 @@ const commands = [
   require('../src/commands/resolveIncident'),
   require('../src/commands/addWarning'),
   require('../src/commands/resolveWarning'),
+  require('../src/commands/reportPlayer'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

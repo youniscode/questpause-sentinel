@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 6)
+# QUESTPAUSE Sentinel — Project Map (Stage 7)
 
 ```
 questpause-sentinel/
@@ -17,6 +17,7 @@ questpause-sentinel/
 │   │   └── interactionCreate.js         # Slash command handler
 │   ├── commands/
 │   │   ├── sentinelStatus.js            # /sentinel-status
+│   │   ├── reportPlayer.js              # /report-player
 │   │   ├── logIncident.js               # /log-incident (admin)
 │   │   ├── playerHistory.js             # /player-history
 │   │   ├── resolveIncident.js           # /resolve-incident (admin)
@@ -25,26 +26,29 @@ questpause-sentinel/
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
-│   │       └── warningLogger.js         # Warning CRUD logic
+│   │       ├── warningLogger.js         # Warning CRUD logic
+│   │       └── reportLogger.js          # Report CRUD logic
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
 │   │   └── data/
 │   │       ├── .gitkeep
 │   │       ├── incidents.json           # Incident records
-│   │       └── warnings.json            # Warning records
+│   │       ├── warnings.json            # Warning records
+│   │       └── reports.json             # Player report records
 │   ├── config/
 │   │   └── index.js                     # Version and environment config
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
 
-## Stage 6 Additions
+## Stage 7 Additions
 
-- `/resolve-warning` admin command — resolve active warnings with resolution notes
-- Case-insensitive ID lookup, not-found/already-resolved error handling
-- `resolveWarning()` function in warningLogger with status, timestamp, and attribution
-- `/player-history` now shows Resolved Warnings count alongside Active Warnings
+- `/report-player` command (public) — players can submit reports for admin review
+- `reportLogger.js` — report CRUD with sequential QP-REP-XXXX IDs
+- Reports saved to `reports.json` (gitignored)
+- Admin alert sent to `SENTINEL_REPORT_CHANNEL_ID` if configured
+- No automatic punishments — human admins review and decide
 
 ## Environment Variables
 
@@ -53,3 +57,4 @@ questpause-sentinel/
 | `DISCORD_TOKEN` | Discord bot token |
 | `DISCORD_CLIENT_ID` | Discord application client ID |
 | `DISCORD_GUILD_ID` | Guild ID for dev (empty = global commands) |
+| `SENTINEL_REPORT_CHANNEL_ID` | Channel ID for report alerts (optional) |

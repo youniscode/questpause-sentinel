@@ -7,6 +7,7 @@ const DATA_DIR = path.join(process.cwd(), 'src', 'storage', 'data');
 const collections = {
   incidents: { file: 'incidents.json', default: [] },
   warnings: { file: 'warnings.json', default: [] },
+  reports: { file: 'reports.json', default: [] },
 };
 
 const cache = {};
