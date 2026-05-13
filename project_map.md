@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 14)
+# QUESTPAUSE Sentinel — Project Map (Stage 15)
 
 ```
 questpause-sentinel/
@@ -41,7 +41,11 @@ questpause-sentinel/
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
-│   │   └── personaSettings.js           # Runtime persona config manager
+│   │   ├── personaSettings.js           # Runtime persona config manager
+│   │   ├── ambientMessages.js           # Ambient message pools per game
+│   │   ├── ambientSettings.js           # Ambient runtime config (ambientSettings.json)
+│   │   ├── ambientState.js              # Ambient last-post timestamps (ambientState.json)
+│   │   └── ambientScheduler.js          # Ambient message timer + posting loop
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -51,7 +55,9 @@ questpause-sentinel/
 │   │       ├── warnings.json            # Warning records
 │   │       ├── reports.json             # Player report records
 │   │       ├── watchlist.json           # Player watchlist records
-│   │       └── personaSettings.json     # Runtime persona config
+│   │       ├── personaSettings.json     # Runtime persona config
+│   │       ├── ambientSettings.json     # Ambient runtime config
+│   │       └── ambientState.json        # Ambient last-post timestamps
 │   ├── config/
 │   │   ├── index.js                     # Version and environment config
 │   │   ├── keywords.js                  # Serious keyword list
@@ -143,6 +149,21 @@ questpause-sentinel/
 - If `personaSettings.json` is missing or invalid, falls back to `.env` defaults gracefully
 - All persona commands are persistent — changes survive bot restarts via `personaSettings.json`
 
+## Stage 15 Additions
+
+- Ambient persona messages — occasional light game-themed messages in mapped persona channels
+- `ambientMessages.js` — curated message pools (10 per game), `pickMessage(game)` + `getPersonaForGame(game)`
+- `ambientSettings.js` — runtime settings manager (ambientEnabled, ambientCooldownMinutes) persisted to `ambientSettings.json`
+- `ambientState.js` — last-post timestamps per channel persisted to `ambientState.json` (prevents spam after restart)
+- `ambientScheduler.js` — 5-minute interval loop; checks `isEnabled()`, cooldown per channel, allowed channel filter, then posts
+- `/ambient-status` (public) — shows enabled state, cooldown, number of mapped persona channels
+- `/ambient-toggle` (admin) — enables/disables ambient messages at runtime, persisted to `ambientSettings.json`
+- `/ambient-cooldown` (admin) — sets cooldown (30–1440 min), persisted to `ambientSettings.json`
+- Ambient respects Stage 11 channel allow/block config; never posts in alert/report/blocked channels
+- Serious keyword guard and persona trigger replies unchanged
+- Default: `ENABLE_AMBIENT_PERSONA_MESSAGES=false`, `AMBIENT_PERSONA_COOLDOWN_MINUTES=240` — disabled by default in `.env.example`
+- Cooldown state persists across restarts via `ambientState.json` (file-based, not `.env`)
+
 ## Environment Variables
 
 | Variable | Description |
@@ -164,3 +185,5 @@ questpause-sentinel/
 | `WINDROSE_CHANNEL_IDS` | Comma-separated channel IDs for Windrose persona (optional) |
 | `MINECRAFT_CHANNEL_IDS` | Comma-separated channel IDs for Minecraft persona (optional) |
 | `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` | Comma-separated channel IDs for 7 Days to Die persona (optional) |
+| `ENABLE_AMBIENT_PERSONA_MESSAGES` | Enable ambient persona messages (`true`/`false`, default `false`) |
+| `AMBIENT_PERSONA_COOLDOWN_MINUTES` | Cooldown between ambient messages in minutes (default 240) |

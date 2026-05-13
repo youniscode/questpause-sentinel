@@ -18,11 +18,14 @@ const unwatchPlayer = require('./commands/unwatchPlayer');
 const personaStatus = require('./commands/personaStatus');
 const personaToggle = require('./commands/personaToggle');
 const personaCooldown = require('./commands/personaCooldown');
+const ambientStatus = require('./commands/ambientStatus');
+const ambientToggle = require('./commands/ambientToggle');
+const ambientCooldown = require('./commands/ambientCooldown');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 const messageCreate = require('./events/messageCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown]);
 
 const client = new Client({
   intents: [
@@ -46,6 +49,9 @@ client.commands.set(unwatchPlayer.data.name, unwatchPlayer);
 client.commands.set(personaStatus.data.name, personaStatus);
 client.commands.set(personaToggle.data.name, personaToggle);
 client.commands.set(personaCooldown.data.name, personaCooldown);
+client.commands.set(ambientStatus.data.name, ambientStatus);
+client.commands.set(ambientToggle.data.name, ambientToggle);
+client.commands.set(ambientCooldown.data.name, ambientCooldown);
 
 async function init() {
   try {
@@ -57,6 +63,11 @@ async function init() {
 
     const personaSettings = require('./modules/personas/personaSettings');
     personaSettings.init();
+
+    const ambientSettings = require('./modules/personas/ambientSettings');
+    ambientSettings.init();
+    const ambientState = require('./modules/personas/ambientState');
+    ambientState.init();
 
     const { gameChannelCounts } = require('./config/channelGames');
     const personaSummary = Object.entries(gameChannelCounts)
@@ -80,6 +91,9 @@ async function init() {
     }
 
     await client.login(token);
+
+    const ambientScheduler = require('./modules/personas/ambientScheduler');
+    ambientScheduler.start(client);
   } catch (err) {
     logger.error(`Failed to start: ${err.message}`);
     process.exit(1);

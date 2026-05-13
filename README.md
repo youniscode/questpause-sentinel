@@ -10,7 +10,16 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 14)
+## Active Systems
+
+| System | Description |
+|--------|-------------|
+| Keyword Guard | Monitors messages for serious keywords, alerts admins (Stage 10) |
+| Channel Config | Allow/block channel and category filtering (Stage 11) |
+| Persona Trigger Replies | Replies to harmless keywords with game-themed responses (Stage 12–14) |
+| Ambient Persona Messages | Periodic light messages in mapped game channels (Stage 15) |
+
+## Slash Commands (Stage 15)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -27,6 +36,9 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/persona-status` | Show persona system status | No |
 | `/persona-toggle` | Enable or disable persona replies | Yes |
 | `/persona-cooldown` | Change persona cooldown values | Yes |
+| `/ambient-status` | Show ambient persona message system status | No |
+| `/ambient-toggle` | Enable or disable ambient persona messages | Yes |
+| `/ambient-cooldown` | Set ambient persona message cooldown (30–1440 min) | Yes |
 
 ## Active Systems
 
@@ -124,7 +136,10 @@ src/
 │   ├── unwatchPlayer.js             # /unwatch-player (admin)
 │   ├── personaStatus.js             # /persona-status
 │   ├── personaToggle.js             # /persona-toggle (admin)
-│   └── personaCooldown.js           # /persona-cooldown (admin)
+│   ├── personaCooldown.js           # /persona-cooldown (admin)
+│   ├── ambientStatus.js             # /ambient-status
+│   ├── ambientToggle.js             # /ambient-toggle (admin)
+│   └── ambientCooldown.js           # /ambient-cooldown (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
@@ -133,10 +148,14 @@ src/
 │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │       ├── keywordGuard.js          # Serious keyword detection
 │       └── alerts.js                # Admin alert sender
-│   └── personas/
+    │   └── personas/
 │       ├── personaRouter.js             # Trigger matching + reply building
 │       ├── triggerReplies.js            # Cooldown + env-check wrapper
-│       └── personaSettings.js           # Runtime persona config manager
+│       ├── personaSettings.js           # Runtime persona config manager
+│       ├── ambientMessages.js           # Ambient message pools per game
+│       ├── ambientSettings.js           # Ambient runtime config (ambientSettings.json)
+│       ├── ambientState.js              # Ambient last-post timestamps (ambientState.json)
+│       └── ambientScheduler.js          # Ambient message timer + posting loop
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -146,7 +165,9 @@ src/
 │       ├── warnings.json            # Warning records
 │       ├── reports.json             # Player report records
 │       ├── watchlist.json           # Player watchlist records
-│       └── personaSettings.json     # Runtime persona config
+│       ├── personaSettings.json     # Runtime persona config
+│       ├── ambientSettings.json     # Ambient runtime config
+│       └── ambientState.json        # Ambient last-post timestamps
 ├── config/
 │   ├── index.js                     # Version and environment config
 │   ├── keywords.js                  # Serious keyword list
@@ -168,7 +189,8 @@ src/
 ## Future Planned Features
 
 The following are planned but not yet active:
-- Ambient messages
+- AI-generated messages
+- SQLite database migration
 
 ## Deployment
 

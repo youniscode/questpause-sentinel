@@ -16,6 +16,9 @@ const commands = [
   require('../src/commands/personaStatus'),
   require('../src/commands/personaToggle'),
   require('../src/commands/personaCooldown'),
+  require('../src/commands/ambientStatus'),
+  require('../src/commands/ambientToggle'),
+  require('../src/commands/ambientCooldown'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());
