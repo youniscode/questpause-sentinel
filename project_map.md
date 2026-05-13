@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 19)
+# QUESTPAUSE Sentinel — Project Map (Stage 20)
 
 ```
 questpause-sentinel/
@@ -36,7 +36,8 @@ questpause-sentinel/
 │   │   ├── sentinelDashboard.js         # /sentinel-dashboard (admin)
 │   │   ├── playerProfile.js            # /player-profile (admin)
 │   │   ├── linkReportIncident.js       # /link-report-incident (admin)
-│   │   └── caseSummary.js              # /case-summary (admin)
+│   │   ├── caseSummary.js              # /case-summary (admin)
+│   │   └── exportCase.js               # /export-case (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -47,7 +48,8 @@ questpause-sentinel/
 │   │       ├── alerts.js                # Admin alert sender
 │   │       ├── dashboardService.js      # Dashboard data aggregation
 │   │       ├── playerProfileService.js  # Player profile data service
-│   │       └── caseSummaryService.js    # Case summary lookup + linked data
+│   │       ├── caseSummaryService.js    # Case summary lookup + linked data
+│   │       └── exportCaseService.js     # Markdown export formatter
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -223,6 +225,16 @@ questpause-sentinel/
   - Active watchlist: monitor or unwatch later
   - Resolved/removed: no open action required
 - No changes to existing commands, keyword guard, persona, ambient, dashboard, profile, or linking systems
+
+## Stage 20 Additions
+
+- `/export-case` command (admin-only) — exports a moderation record as a Markdown (.md) file attachment
+- `exportCaseService.js` — reuses `getCaseSummary()` from caseSummaryService, formats result as clean Markdown
+- Markdown includes: case ID, type, status, game, severity, created at, created by, player/reported player, reporter info
+- Shows full detail sections: Issue/Note/Reason, Evidence, Linked Incident, Linked Reports, Resolution Details, Recommended Next Action
+- Sent as an ephemeral message with `.md` file attachment via `AttachmentBuilder`
+- Read-only — does not modify any data
+- No changes to existing commands or systems
 
 ## Environment Variables
 

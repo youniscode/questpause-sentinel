@@ -23,6 +23,7 @@ const commands = [
   require('../src/commands/playerProfile'),
   require('../src/commands/linkReportIncident'),
   require('../src/commands/caseSummary'),
+  require('../src/commands/exportCase'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

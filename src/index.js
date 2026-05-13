@@ -25,11 +25,12 @@ const sentinelDashboard = require('./commands/sentinelDashboard');
 const playerProfile = require('./commands/playerProfile');
 const linkReportIncident = require('./commands/linkReportIncident');
 const caseSummary = require('./commands/caseSummary');
+const exportCase = require('./commands/exportCase');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 const messageCreate = require('./events/messageCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary, exportCase]);
 
 const client = new Client({
   intents: [
@@ -60,6 +61,7 @@ client.commands.set(sentinelDashboard.data.name, sentinelDashboard);
 client.commands.set(playerProfile.data.name, playerProfile);
 client.commands.set(linkReportIncident.data.name, linkReportIncident);
 client.commands.set(caseSummary.data.name, caseSummary);
+client.commands.set(exportCase.data.name, exportCase);
 
 async function init() {
   try {
