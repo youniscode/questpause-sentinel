@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 17)
+# QUESTPAUSE Sentinel — Project Map (Stage 18)
 
 ```
 questpause-sentinel/
@@ -34,7 +34,8 @@ questpause-sentinel/
 │   │   ├── ambientToggle.js             # /ambient-toggle (admin)
 │   │   ├── ambientCooldown.js           # /ambient-cooldown (admin)
 │   │   ├── sentinelDashboard.js         # /sentinel-dashboard (admin)
-│   │   └── playerProfile.js            # /player-profile (admin)
+│   │   ├── playerProfile.js            # /player-profile (admin)
+│   │   └── linkReportIncident.js       # /link-report-incident (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -194,6 +195,16 @@ questpause-sentinel/
 - If no records: "No moderation profile found for this player."
 - Read-only — does not create or modify any records
 - No changes to existing commands, keyword guard, persona, or dashboard systems
+
+## Stage 18 Additions
+
+- `/link-report-incident` command (admin-only) — links an existing report to an existing incident
+- `linkReportToIncident()` added to `reportLogger.js` — updates report with `linkedIncidentId`, `linkedAt`, `linkedBy`
+- Does **not** change report status or incident status automatically
+- Looks up both report and incident by exact ID (case-insensitive); returns clean error if either not found
+- Confirmation embed shows: Report ID, Incident ID, Reported Player, Incident Player, Game, Linked By, Linked At
+- `playerProfile.js` now shows linked incident ID (`→ QP-INC-XXXX`) on report activity lines
+- No changes to existing commands, keyword guard, persona, ambient, dashboard, or profile systems
 
 ## Environment Variables
 

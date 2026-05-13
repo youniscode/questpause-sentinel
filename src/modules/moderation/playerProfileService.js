@@ -64,6 +64,7 @@ async function getPlayerProfile(query) {
       severity: null,
       createdAt: r.createdAt,
       summary: r.issue || '',
+      linkedIncidentId: r.linkedIncidentId || null,
     })),
     ...warnMatches.map((w) => ({
       id: w.id,

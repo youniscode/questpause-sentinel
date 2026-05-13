@@ -37,6 +37,23 @@ async function addReport({ reportedPlayer, reporterId, reporterTag, game, issue,
   }
 }
 
+async function linkReportToIncident(reportId, incidentId, linkedBy) {
+  const all = await getAllReports();
+  if (!all) return { error: 'not_found' };
+
+  const idx = all.findIndex((r) => r.id.toLowerCase() === reportId.toLowerCase());
+  if (idx === -1) return { error: 'report_not_found' };
+
+  const report = all[idx];
+  report.linkedIncidentId = incidentId;
+  report.linkedAt = new Date().toISOString();
+  report.linkedBy = linkedBy;
+
+  await store.write('reports', all);
+  logger.info(`Report linked: ${report.id} → incident ${incidentId} by ${linkedBy}`);
+  return { error: null, report };
+}
+
 async function resolveReport(reportId, outcome, resolution, reviewedBy, linkedIncidentId) {
   const all = await getAllReports();
   if (!all) return { error: 'not_found' };
@@ -63,4 +80,5 @@ module.exports = {
   addReport,
   getAllReports,
   resolveReport,
+  linkReportToIncident,
 };

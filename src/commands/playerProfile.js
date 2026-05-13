@@ -80,7 +80,8 @@ async function execute(interaction) {
     const lines = activity.map((item) => {
       const severity = item.severity ? ` [${item.severity}]` : '';
       const date = formatDate(item.createdAt);
-      return `\`${item.id}\` **${item.type}** — ${item.game} — ${item.status}${severity} — ${date} — ${truncate(item.summary, 60)}`;
+      const linked = item.linkedIncidentId ? ` → ${item.linkedIncidentId}` : '';
+      return `\`${item.id}\` **${item.type}**${linked} — ${item.game} — ${item.status}${severity} — ${date} — ${truncate(item.summary, 60)}`;
     });
     embed.fields.push({
       name: `Latest Activity (${activity.length})`,
