@@ -1,0 +1,22 @@
+{
+  "name": "questpause-sentinel",
+  "version": "1.0.0",
+  "description": "QUESTPAUSE Sentinel - Network safety, moderation, conflict tracking, player report, and personality bot",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy-commands": "node scripts/deploy-commands.js",
+    "lint": "eslint src/",
+    "typecheck": "echo 'No typechecker configured'"
+  },
+  "keywords": ["discord", "bot", "moderation", "questpause"],
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0"
+  }
+}
