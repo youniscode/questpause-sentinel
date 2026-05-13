@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 11)
+## Current Commands (Stage 12)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -30,6 +30,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | System | Description |
 |--------|-------------|
 | Keyword Guard | Monitors guild text channels for serious keywords and alerts admins via `SENTINEL_ALERT_CHANNEL_ID` |
+| Game Personas | Game-themed personality replies when harmless trigger keywords are detected in game-specific channels |
 
 ## Channel Configuration
 
@@ -47,6 +48,21 @@ Behavior:
 - The alert and report channels (`SENTINEL_ALERT_CHANNEL_ID`, `SENTINEL_REPORT_CHANNEL_ID`) are always excluded
 - Bot messages and DMs are always ignored regardless of config
 - Leave any variable empty to disable its filtering
+
+## Persona Channel Routing
+
+Assign Discord channels to specific game personas so trigger keywords only fire in the correct game channel:
+
+| Variable | Game Persona |
+|----------|------------|
+| `VALHEIM_CHANNEL_IDS` | The Old Raven |
+| `PROJECT_ZOMBOID_CHANNEL_IDS` | Knox Radio |
+| `ICARUS_CHANNEL_IDS` | Orbital Handler |
+| `WINDROSE_CHANNEL_IDS` | The Quartermaster |
+| `MINECRAFT_CHANNEL_IDS` | The Block Keeper |
+| `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` | Bunker Broadcast |
+
+Each accepts comma-separated Discord channel IDs. If a channel is mapped to a game, only that game's trigger keywords and persona will respond. Unmapped channels will match any persona (first keyword match wins).
 
 ## Storage
 
@@ -71,6 +87,15 @@ Current collections:
    - `SENTINEL_MONITORED_CHANNEL_IDS` — comma-separated channel IDs to monitor exclusively (optional)
    - `SENTINEL_BLOCKED_CHANNEL_IDS` — comma-separated channel IDs to ignore (optional)
    - `SENTINEL_BLOCKED_CATEGORY_IDS` — comma-separated category IDs to ignore (optional)
+   - `ENABLE_PERSONA_REPLIES` — set to `true` to enable game persona replies (optional, default disabled)
+   - `PERSONA_REPLY_COOLDOWN_MINUTES` — cooldown per channel for persona replies (optional, default 15)
+   - `PERSONA_PLAYER_COOLDOWN_MINUTES` — cooldown per player for persona replies (optional, default 30)
+   - `VALHEIM_CHANNEL_IDS` — comma-separated channel IDs for Valheim persona routing (optional)
+   - `PROJECT_ZOMBOID_CHANNEL_IDS` — comma-separated channel IDs for Project Zomboid persona routing (optional)
+   - `ICARUS_CHANNEL_IDS` — comma-separated channel IDs for ICARUS persona routing (optional)
+   - `WINDROSE_CHANNEL_IDS` — comma-separated channel IDs for Windrose persona routing (optional)
+   - `MINECRAFT_CHANNEL_IDS` — comma-separated channel IDs for Minecraft persona routing (optional)
+   - `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` — comma-separated channel IDs for 7 Days to Die persona routing (optional)
 4. `npm run deploy-commands` — register slash commands with Discord
 5. `npm start` — launch the bot
 
@@ -82,7 +107,7 @@ src/
 ├── events/
 │   ├── ready.js                     # Bot ready event
 │   ├── interactionCreate.js         # Slash command handler
-│   └── messageCreate.js             # Keyword guard monitor
+│   └── messageCreate.js             # Keyword guard + persona triggers
 ├── commands/
 │   ├── sentinelStatus.js            # /sentinel-status
 │   ├── logIncident.js               # /log-incident (admin)
@@ -102,6 +127,9 @@ src/
 │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │       ├── keywordGuard.js          # Serious keyword detection
 │       └── alerts.js                # Admin alert sender
+│   └── personas/
+│       ├── personaRouter.js         # Trigger matching + reply building
+│       └── triggerReplies.js        # Cooldown + env-check wrapper
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -114,7 +142,10 @@ src/
 ├── config/
 │   ├── index.js                     # Version and environment config
 │   ├── keywords.js                  # Serious keyword list
-│   └── channels.js                  # Channel allow/block config
+│   ├── channels.js                  # Channel allow/block config
+│   ├── channelGames.js              # Channel-to-game mapping
+│   ├── personas.js                  # Game persona definitions
+│   └── triggers.js                  # Harmless trigger keywords + replies
 └── utils/
     └── logger.js                    # Logging utility
 ```
@@ -129,8 +160,6 @@ src/
 ## Future Planned Features
 
 The following are planned but not yet active:
-- Game personas
-- Trigger replies
 - Ambient messages
 
 ## Deployment

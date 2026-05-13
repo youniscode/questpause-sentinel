@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 11)
+# QUESTPAUSE Sentinel — Project Map (Stage 12)
 
 ```
 questpause-sentinel/
@@ -15,7 +15,7 @@ questpause-sentinel/
 │   ├── events/
 │   │   ├── ready.js                     # Bot ready event
 │   │   ├── interactionCreate.js         # Slash command handler
-│   │   └── messageCreate.js             # Keyword guard monitor
+│   │   └── messageCreate.js             # Keyword guard + persona triggers
 │   ├── commands/
 │   │   ├── sentinelStatus.js            # /sentinel-status
 │   │   ├── reportPlayer.js              # /report-player
@@ -35,6 +35,9 @@ questpause-sentinel/
 │   │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │   │       ├── keywordGuard.js          # Serious keyword detection
 │   │       └── alerts.js                # Admin alert sender
+│   ├── personas/
+│   │   ├── personaRouter.js             # Trigger matching + reply building
+│   │   └── triggerReplies.js            # Cooldown + env-check wrapper
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -47,7 +50,10 @@ questpause-sentinel/
 │   ├── config/
 │   │   ├── index.js                     # Version and environment config
 │   │   ├── keywords.js                  # Serious keyword list
-│   │   └── channels.js                  # Channel allow/block config
+│   │   ├── channels.js                  # Channel allow/block config
+│   │   ├── channelGames.js              # Channel-to-game mapping
+│   │   ├── personas.js                  # Game persona definitions
+│   │   └── triggers.js                  # Harmless trigger keywords + replies
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
@@ -101,6 +107,19 @@ questpause-sentinel/
 - Startup logs channel config summary: monitored count, blocked channel count, blocked category count
 - Empty env vars are handled gracefully — no crashes
 
+## Stage 12 Additions
+
+- Game Personas — 6 game-themed personas with personality replies to harmless trigger keywords
+- `config/personas.js` — defines 6 personas (Knox Radio, The Old Raven, Orbital Handler, The Quartermaster, The Block Keeper, Bunker Broadcast)
+- `config/triggers.js` — 30+ harmless trigger keywords across 6 games, each with 3 varied reply options
+- `config/channelGames.js` — parses `*_CHANNEL_IDS` env vars into channelId→gameName map
+- `modules/personas/personaRouter.js` — accepts `channelId` param; if mapped to a game, only that game's triggers are checked; unmapped channels fall back to any-game matching
+- `modules/personas/triggerReplies.js` — passes `message.channel.id` to `matchTrigger`
+- `messageCreate.js` now calls both `keywordGuard.checkMessage()` and `triggerReplies.checkForTrigger()` in sequence
+- Serious keyword guard takes priority — if a serious keyword is present, persona reply is suppressed
+- Respects Stage 11 channel allow/block config, ignores bots and DMs
+- Controlled by `ENABLE_PERSONA_REPLIES=true`, `PERSONA_REPLY_COOLDOWN_MINUTES=15`, `PERSONA_PLAYER_COOLDOWN_MINUTES=30`
+
 ## Environment Variables
 
 | Variable | Description |
@@ -113,3 +132,12 @@ questpause-sentinel/
 | `SENTINEL_MONITORED_CHANNEL_IDS` | Comma-separated channel IDs to monitor exclusively (optional) |
 | `SENTINEL_BLOCKED_CHANNEL_IDS` | Comma-separated channel IDs to ignore (optional) |
 | `SENTINEL_BLOCKED_CATEGORY_IDS` | Comma-separated category IDs to ignore (optional) |
+| `ENABLE_PERSONA_REPLIES` | Enable game persona replies (`true`/`false`, optional) |
+| `PERSONA_REPLY_COOLDOWN_MINUTES` | Per-channel cooldown for persona replies (default 15) |
+| `PERSONA_PLAYER_COOLDOWN_MINUTES` | Per-player cooldown for persona replies (default 30) |
+| `VALHEIM_CHANNEL_IDS` | Comma-separated channel IDs for Valheim persona (optional) |
+| `PROJECT_ZOMBOID_CHANNEL_IDS` | Comma-separated channel IDs for Project Zomboid persona (optional) |
+| `ICARUS_CHANNEL_IDS` | Comma-separated channel IDs for ICARUS persona (optional) |
+| `WINDROSE_CHANNEL_IDS` | Comma-separated channel IDs for Windrose persona (optional) |
+| `MINECRAFT_CHANNEL_IDS` | Comma-separated channel IDs for Minecraft persona (optional) |
+| `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` | Comma-separated channel IDs for 7 Days to Die persona (optional) |
