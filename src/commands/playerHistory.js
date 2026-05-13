@@ -13,48 +13,66 @@ async function execute(interaction) {
 
   const query = interaction.options.getString('player').trim().toLowerCase();
 
-  const all = await store.read('incidents');
-  if (!all || all.length === 0) {
-    await interaction.editReply({ content: 'No incidents found. The incident log is empty.' });
-    return;
-  }
+  const rawPlayer = interaction.options.getString('player').trim();
 
-  const matches = all.filter((inc) => inc.player.toLowerCase().includes(query));
+  const allIncidents = (await store.read('incidents')) || [];
+  const allWarnings = (await store.read('warnings')) || [];
 
-  if (matches.length === 0) {
+  const incMatches = allIncidents.filter((inc) => inc.player.toLowerCase().includes(query));
+  const warnMatches = allWarnings.filter((w) => w.player.toLowerCase().includes(query));
+
+  if (incMatches.length === 0 && warnMatches.length === 0) {
     await interaction.editReply({
-      content: `No incident history found for \`${interaction.options.getString('player').trim()}\`.`,
+      content: `No history found for \`${rawPlayer}\`.`,
     });
     return;
   }
 
-  const openCount = matches.filter((i) => i.status === 'Open').length;
-  const resolvedCount = matches.filter((i) => i.status === 'Resolved').length;
+  const openCount = incMatches.filter((i) => i.status === 'Open').length;
+  const resolvedCount = incMatches.filter((i) => i.status === 'Resolved').length;
+  const activeWarnings = warnMatches.filter((w) => w.status === 'Active').length;
 
-  const sorted = [...matches].sort(
+  const sortedInc = [...incMatches].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
   );
-  const latest = sorted.slice(0, 5);
+  const latestInc = sortedInc.slice(0, 5);
+
+  const sortedWarn = [...warnMatches].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+  );
+  const latestWarn = sortedWarn.slice(0, 5);
 
   const embed = new EmbedBuilder()
     .setTitle('Player History')
     .setColor(0x0099ff)
     .addFields(
-      { name: 'Player Searched', value: interaction.options.getString('player').trim(), inline: false },
-      { name: 'Total Incidents', value: String(matches.length), inline: true },
+      { name: 'Player Searched', value: rawPlayer, inline: false },
+      { name: 'Total Incidents', value: String(incMatches.length), inline: true },
       { name: 'Open', value: String(openCount), inline: true },
       { name: 'Resolved', value: String(resolvedCount), inline: true },
+      { name: 'Active Warnings', value: String(activeWarnings), inline: true },
     )
     .setTimestamp();
 
-  const list = latest
-    .map((inc) => {
-      const date = new Date(inc.createdAt).toUTCString();
-      return `\`${inc.id}\` — ${inc.game} — ${inc.type} — [${inc.severity}] — ${inc.status} — ${date}`;
-    })
-    .join('\n');
+  if (incMatches.length > 0) {
+    const incList = latestInc
+      .map((inc) => {
+        const date = new Date(inc.createdAt).toUTCString();
+        return `\`${inc.id}\` — ${inc.game} — ${inc.type} — [${inc.severity}] — ${inc.status} — ${date}`;
+      })
+      .join('\n');
+    embed.addFields({ name: `Latest ${latestInc.length} Incidents`, value: incList || 'None', inline: false });
+  }
 
-  embed.addFields({ name: `Latest ${latest.length} Incidents`, value: list || 'None', inline: false });
+  if (warnMatches.length > 0) {
+    const warnList = latestWarn
+      .map((w) => {
+        const date = new Date(w.createdAt).toUTCString();
+        return `\`${w.id}\` — ${w.game} — [${w.severity}] — ${w.status} — ${date} — ${w.reason.slice(0, 80)}`;
+      })
+      .join('\n');
+    embed.addFields({ name: `Latest ${latestWarn.length} Warnings`, value: warnList || 'None', inline: false });
+  }
 
   await interaction.editReply({ embeds: [embed] });
 }

@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 4)
+# QUESTPAUSE Sentinel — Project Map (Stage 5)
 
 ```
 questpause-sentinel/
@@ -19,27 +19,31 @@ questpause-sentinel/
 │   │   ├── sentinelStatus.js            # /sentinel-status
 │   │   ├── logIncident.js               # /log-incident (admin)
 │   │   ├── playerHistory.js             # /player-history
-│   │   └── resolveIncident.js           # /resolve-incident (admin)
+│   │   ├── resolveIncident.js           # /resolve-incident (admin)
+│   │   └── addWarning.js                # /add-warning (admin)
 │   ├── modules/
 │   │   └── moderation/
-│   │       └── incidentLogger.js        # Incident CRUD logic
+│   │       ├── incidentLogger.js        # Incident CRUD logic
+│   │       └── warningLogger.js         # Warning CRUD logic
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
 │   │   └── data/
 │   │       ├── .gitkeep
-│   │       └── incidents.json           # Incident records
+│   │       ├── incidents.json           # Incident records
+│   │       └── warnings.json            # Warning records
 │   ├── config/
 │   │   └── index.js                     # Version and environment config
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
 
-## Stage 4 Additions
+## Stage 5 Additions
 
-- `/resolve-incident` admin command — resolve open incidents with resolution notes
-- Case-insensitive ID lookup, empty/duplicate/not-found error handling
-- `resolveIncident()` function in incidentLogger with status, timestamp, and attribution
+- `/add-warning` admin command — issue warnings with QP-WARN-XXXX ID format
+- `warningLogger.js` — warning CRUD with sequential IDs and status tracking
+- Warnings added to jsonStore collections (auto-creates `warnings.json`)
+- `/player-history` now shows incidents and warnings side by side (latest 5 each)
 
 ## Environment Variables
 

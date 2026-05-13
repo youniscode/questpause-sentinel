@@ -10,18 +10,23 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 4)
+## Current Commands (Stage 5)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
 | `/sentinel-status` | Display Sentinel bot status and stats | No |
 | `/log-incident` | Log a new incident | Yes |
-| `/player-history` | View incident history for a player | No |
+| `/player-history` | View incident and warning history for a player | No |
 | `/resolve-incident` | Resolve an open incident | Yes |
+| `/add-warning` | Issue a warning to a player | Yes |
 
 ## Storage
 
-Incident data is stored as JSON files under `src/storage/data/incidents.json`. The storage layer uses an abstract interface (`src/storage/storeInterface.js`) designed to be swapped for SQLite in a future stage without changing business logic.
+Data is stored as JSON files under `src/storage/data/`. The storage layer uses an abstract interface (`src/storage/storeInterface.js`) designed to be swapped for SQLite in a future stage without changing business logic.
+
+Current collections:
+- `incidents.json` — incident records
+- `warnings.json` — warning records
 
 ## Setup
 
@@ -46,16 +51,19 @@ src/
 │   ├── sentinelStatus.js            # /sentinel-status
 │   ├── logIncident.js               # /log-incident (admin)
 │   ├── playerHistory.js             # /player-history
-│   └── resolveIncident.js           # /resolve-incident (admin)
+│   ├── resolveIncident.js           # /resolve-incident (admin)
+│   └── addWarning.js                # /add-warning (admin)
 ├── modules/
 │   └── moderation/
-│       └── incidentLogger.js        # Incident create/read logic
+│   ├── incidentLogger.js        # Incident CRUD logic
+│   └── warningLogger.js         # Warning CRUD logic
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
 │   └── data/
 │       ├── .gitkeep
-│       └── incidents.json           # Incident records
+│   ├── incidents.json           # Incident records
+│   └── warnings.json            # Warning records
 ├── config/
 │   └── index.js                     # Version and environment config
 └── utils/
@@ -73,7 +81,6 @@ src/
 
 The following are planned but not yet active:
 - Player reports
-- Warnings
 - Watchlist
 - Serious keyword guard
 - Admin alerts
