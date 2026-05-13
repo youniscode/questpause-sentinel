@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 20)
+# QUESTPAUSE Sentinel — Project Map (Stage 21)
 
 ```
 questpause-sentinel/
@@ -235,6 +235,16 @@ questpause-sentinel/
 - Sent as an ephemeral message with `.md` file attachment via `AttachmentBuilder`
 - Read-only — does not modify any data
 - No changes to existing commands or systems
+
+## Stage 21 Additions
+
+- Oracle VM production deployment readiness
+- `DEPLOY.md` rewritten with comprehensive production guide for Stage 20
+- Full `.env` checklist documenting all 19 active environment variables
+- PM2 lifecycle: start, restart, stop, status, logs, monit, save, startup
+- Update workflow: `git pull` → `npm install --production` → `npm run deploy-commands` → `pm2 restart`
+- Backup warning: `src/storage/data/*.json` contains live moderation data and must be backed up before redeploy
+- No code changes — documentation only
 
 ## Environment Variables
 
