@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 15)
+# QUESTPAUSE Sentinel — Project Map (Stage 16)
 
 ```
 questpause-sentinel/
@@ -29,7 +29,11 @@ questpause-sentinel/
 │   │   ├── unwatchPlayer.js             # /unwatch-player (admin)
 │   │   ├── personaStatus.js             # /persona-status
 │   │   ├── personaToggle.js             # /persona-toggle (admin)
-│   │   └── personaCooldown.js           # /persona-cooldown (admin)
+│   │   ├── personaCooldown.js           # /persona-cooldown (admin)
+│   │   ├── ambientStatus.js             # /ambient-status
+│   │   ├── ambientToggle.js             # /ambient-toggle (admin)
+│   │   ├── ambientCooldown.js           # /ambient-cooldown (admin)
+│   │   └── sentinelDashboard.js         # /sentinel-dashboard (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -37,7 +41,8 @@ questpause-sentinel/
 │   │       ├── reportLogger.js          # Report CRUD logic
 │   │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │   │       ├── keywordGuard.js          # Serious keyword detection
-│   │       └── alerts.js                # Admin alert sender
+│   │       ├── alerts.js                # Admin alert sender
+│   │       └── dashboardService.js      # Dashboard data aggregation
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -163,6 +168,17 @@ questpause-sentinel/
 - Serious keyword guard and persona trigger replies unchanged
 - Default: `ENABLE_AMBIENT_PERSONA_MESSAGES=false`, `AMBIENT_PERSONA_COOLDOWN_MINUTES=240` — disabled by default in `.env.example`
 - Cooldown state persists across restarts via `ambientState.json` (file-based, not `.env`)
+
+## Stage 16 Additions
+
+- `/sentinel-dashboard` command (admin-only) — moderation dashboard overview
+- `dashboardService.js` — reads all JSON collections and computes stats + latest open items
+- Embed shows summary counts: open/resolved incidents, open/resolved reports, active/resolved warnings, active/removed watchlist
+- Shows up to 5 latest open items with ID, player, game, severity, created date, and summary
+- Response is ephemeral/private; no sensitive details exposed publicly
+- Embed color: green (0 open), yellow (1–4 open), red (5+ open)
+- If no open items: "No open moderation items. Network looks calm."
+- No changes to existing commands, keyword guard, or persona systems
 
 ## Environment Variables
 

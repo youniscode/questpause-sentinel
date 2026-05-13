@@ -19,6 +19,7 @@ const commands = [
   require('../src/commands/ambientStatus'),
   require('../src/commands/ambientToggle'),
   require('../src/commands/ambientCooldown'),
+  require('../src/commands/sentinelDashboard'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

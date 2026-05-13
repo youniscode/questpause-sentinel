@@ -19,7 +19,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | Persona Trigger Replies | Replies to harmless keywords with game-themed responses (Stage 12–14) |
 | Ambient Persona Messages | Periodic light messages in mapped game channels (Stage 15) |
 
-## Slash Commands (Stage 15)
+## Slash Commands (Stage 16)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -39,6 +39,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/ambient-status` | Show ambient persona message system status | No |
 | `/ambient-toggle` | Enable or disable ambient persona messages | Yes |
 | `/ambient-cooldown` | Set ambient persona message cooldown (30–1440 min) | Yes |
+| `/sentinel-dashboard` | Show moderation dashboard overview | Yes |
 
 ## Active Systems
 
@@ -139,7 +140,8 @@ src/
 │   ├── personaCooldown.js           # /persona-cooldown (admin)
 │   ├── ambientStatus.js             # /ambient-status
 │   ├── ambientToggle.js             # /ambient-toggle (admin)
-│   └── ambientCooldown.js           # /ambient-cooldown (admin)
+│   ├── ambientCooldown.js           # /ambient-cooldown (admin)
+│   └── sentinelDashboard.js         # /sentinel-dashboard (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
@@ -147,8 +149,10 @@ src/
 │       ├── reportLogger.js          # Report CRUD logic
 │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │       ├── keywordGuard.js          # Serious keyword detection
-│       └── alerts.js                # Admin alert sender
-    │   └── personas/
+│       ├── alerts.js                # Admin alert sender
+│       └── dashboardService.js      # Dashboard data aggregation
+├── modules/
+│   └── personas/
 │       ├── personaRouter.js             # Trigger matching + reply building
 │       ├── triggerReplies.js            # Cooldown + env-check wrapper
 │       ├── personaSettings.js           # Runtime persona config manager
