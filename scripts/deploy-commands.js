@@ -13,6 +13,9 @@ const commands = [
   require('../src/commands/resolveReport'),
   require('../src/commands/watchPlayer'),
   require('../src/commands/unwatchPlayer'),
+  require('../src/commands/personaStatus'),
+  require('../src/commands/personaToggle'),
+  require('../src/commands/personaCooldown'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

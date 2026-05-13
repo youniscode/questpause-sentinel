@@ -15,11 +15,14 @@ const reportPlayer = require('./commands/reportPlayer');
 const resolveReport = require('./commands/resolveReport');
 const watchPlayer = require('./commands/watchPlayer');
 const unwatchPlayer = require('./commands/unwatchPlayer');
+const personaStatus = require('./commands/personaStatus');
+const personaToggle = require('./commands/personaToggle');
+const personaCooldown = require('./commands/personaCooldown');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 const messageCreate = require('./events/messageCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown]);
 
 const client = new Client({
   intents: [
@@ -40,6 +43,9 @@ client.commands.set(reportPlayer.data.name, reportPlayer);
 client.commands.set(resolveReport.data.name, resolveReport);
 client.commands.set(watchPlayer.data.name, watchPlayer);
 client.commands.set(unwatchPlayer.data.name, unwatchPlayer);
+client.commands.set(personaStatus.data.name, personaStatus);
+client.commands.set(personaToggle.data.name, personaToggle);
+client.commands.set(personaCooldown.data.name, personaCooldown);
 
 async function init() {
   try {
@@ -48,6 +54,9 @@ async function init() {
 
     const channelConfig = require('./config/channels');
     logger.info(`Channel config — monitored: ${channelConfig.monitoredChannelIds.size}, blocked channels: ${channelConfig.blockedChannelIds.size}, blocked categories: ${channelConfig.blockedCategoryIds.size}`);
+
+    const personaSettings = require('./modules/personas/personaSettings');
+    personaSettings.init();
 
     const { gameChannelCounts } = require('./config/channelGames');
     const personaSummary = Object.entries(gameChannelCounts)

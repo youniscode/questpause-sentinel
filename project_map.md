@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 13)
+# QUESTPAUSE Sentinel — Project Map (Stage 14)
 
 ```
 questpause-sentinel/
@@ -26,7 +26,10 @@ questpause-sentinel/
 │   │   ├── resolveWarning.js            # /resolve-warning (admin)
 │   │   ├── resolveReport.js             # /resolve-report (admin)
 │   │   ├── watchPlayer.js               # /watch-player (admin)
-│   │   └── unwatchPlayer.js             # /unwatch-player (admin)
+│   │   ├── unwatchPlayer.js             # /unwatch-player (admin)
+│   │   ├── personaStatus.js             # /persona-status
+│   │   ├── personaToggle.js             # /persona-toggle (admin)
+│   │   └── personaCooldown.js           # /persona-cooldown (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -37,7 +40,8 @@ questpause-sentinel/
 │   │       └── alerts.js                # Admin alert sender
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
-│   │   └── triggerReplies.js            # Cooldown + env-check wrapper
+│   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
+│   │   └── personaSettings.js           # Runtime persona config manager
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -46,7 +50,8 @@ questpause-sentinel/
 │   │       ├── incidents.json           # Incident records
 │   │       ├── warnings.json            # Warning records
 │   │       ├── reports.json             # Player report records
-│   │       └── watchlist.json           # Player watchlist records
+│   │       ├── watchlist.json           # Player watchlist records
+│   │       └── personaSettings.json     # Runtime persona config
 │   ├── config/
 │   │   ├── index.js                     # Version and environment config
 │   │   ├── keywords.js                  # Serious keyword list
@@ -127,6 +132,16 @@ questpause-sentinel/
 - `channelGames.js` now exports `gameChannelCounts` for startup logging
 - Startup log shows per-game channel counts (e.g., `Valheim: 2, Project Zomboid: 1`)
 - Persona replies disabled in unmapped channels; serious keyword guard continues to work everywhere
+
+## Stage 14 Additions
+
+- `/persona-status` command (public) — shows persona enabled state, cooldown values, and mapped persona channel counts
+- `/persona-toggle` command (admin) — enables/disables persona replies at runtime
+- `/persona-cooldown` command (admin) — updates channel and player cooldowns at runtime (1–360 / 1–720 min)
+- `personaSettings.js` — runtime settings manager that reads/writes `personaSettings.json`
+- `triggerReplies.js` now reads enabled state and cooldowns from `personaSettings.js` instead of `process.env`
+- If `personaSettings.json` is missing or invalid, falls back to `.env` defaults gracefully
+- All persona commands are persistent — changes survive bot restarts via `personaSettings.json`
 
 ## Environment Variables
 

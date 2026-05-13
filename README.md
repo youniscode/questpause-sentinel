@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 13)
+## Current Commands (Stage 14)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -24,6 +24,9 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/resolve-report` | Resolve an open player report | Yes |
 | `/watch-player` | Add a player to the watchlist | Yes |
 | `/unwatch-player` | Remove a player from the watchlist | Yes |
+| `/persona-status` | Show persona system status | No |
+| `/persona-toggle` | Enable or disable persona replies | Yes |
+| `/persona-cooldown` | Change persona cooldown values | Yes |
 
 ## Active Systems
 
@@ -118,7 +121,10 @@ src/
 │   ├── reportPlayer.js              # /report-player
 │   ├── resolveReport.js             # /resolve-report (admin)
 │   ├── watchPlayer.js               # /watch-player (admin)
-│   └── unwatchPlayer.js             # /unwatch-player (admin)
+│   ├── unwatchPlayer.js             # /unwatch-player (admin)
+│   ├── personaStatus.js             # /persona-status
+│   ├── personaToggle.js             # /persona-toggle (admin)
+│   └── personaCooldown.js           # /persona-cooldown (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
@@ -128,8 +134,9 @@ src/
 │       ├── keywordGuard.js          # Serious keyword detection
 │       └── alerts.js                # Admin alert sender
 │   └── personas/
-│       ├── personaRouter.js         # Trigger matching + reply building
-│       └── triggerReplies.js        # Cooldown + env-check wrapper
+│       ├── personaRouter.js             # Trigger matching + reply building
+│       ├── triggerReplies.js            # Cooldown + env-check wrapper
+│       └── personaSettings.js           # Runtime persona config manager
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -138,7 +145,8 @@ src/
 │       ├── incidents.json           # Incident records
 │       ├── warnings.json            # Warning records
 │       ├── reports.json             # Player report records
-│       └── watchlist.json           # Player watchlist records
+│       ├── watchlist.json           # Player watchlist records
+│       └── personaSettings.json     # Runtime persona config
 ├── config/
 │   ├── index.js                     # Version and environment config
 │   ├── keywords.js                  # Serious keyword list

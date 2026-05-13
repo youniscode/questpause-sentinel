@@ -1,6 +1,7 @@
 const { KEYWORDS } = require('../../config/keywords');
 const { monitoredChannelIds, blockedChannelIds, blockedCategoryIds } = require('../../config/channels');
 const { matchTrigger, buildReply } = require('./personaRouter');
+const personaSettings = require('./personaSettings');
 const logger = require('../../utils/logger');
 
 const cooldowns = new Map();
@@ -10,8 +11,8 @@ async function checkForTrigger(message) {
   if (!message.guild) return;
   if (!message.content) return;
 
-  const enabled = process.env.ENABLE_PERSONA_REPLIES;
-  if (!enabled || enabled.toLowerCase() !== 'true') return;
+  const s = personaSettings.getSettings();
+  if (!s.enabled) return;
 
   const alertChannelId = process.env.SENTINEL_ALERT_CHANNEL_ID;
   const reportChannelId = process.env.SENTINEL_REPORT_CHANNEL_ID;
@@ -31,10 +32,8 @@ async function checkForTrigger(message) {
   const match = matchTrigger(content, message.channel.id);
   if (!match) return;
 
-  const replyCooldownMin = parseInt(process.env.PERSONA_REPLY_COOLDOWN_MINUTES, 10) || 15;
-  const playerCooldownMin = parseInt(process.env.PERSONA_PLAYER_COOLDOWN_MINUTES, 10) || 30;
-  const replyCooldownMs = replyCooldownMin * 60 * 1000;
-  const playerCooldownMs = playerCooldownMin * 60 * 1000;
+  const replyCooldownMs = s.replyCooldownMinutes * 60 * 1000;
+  const playerCooldownMs = s.playerCooldownMinutes * 60 * 1000;
 
   const channelKey = `persona:ch:${message.channel.id}`;
   const authorKey = `persona:author:${message.author.id}`;
