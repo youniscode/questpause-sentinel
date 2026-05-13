@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 7)
+## Current Commands (Stage 8)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -21,6 +21,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/resolve-incident` | Resolve an open incident | Yes |
 | `/add-warning` | Issue a warning to a player | Yes |
 | `/resolve-warning` | Resolve an active warning | Yes |
+| `/resolve-report` | Resolve an open player report | Yes |
 
 ## Storage
 
@@ -58,7 +59,8 @@ src/
 │   ├── resolveIncident.js           # /resolve-incident (admin)
 │   ├── addWarning.js                # /add-warning (admin)
 │   ├── resolveWarning.js            # /resolve-warning (admin)
-│   └── reportPlayer.js              # /report-player
+│   ├── reportPlayer.js              # /report-player
+│   └── resolveReport.js             # /resolve-report (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic

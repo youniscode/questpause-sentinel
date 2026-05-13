@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 7)
+# QUESTPAUSE Sentinel — Project Map (Stage 8)
 
 ```
 questpause-sentinel/
@@ -22,7 +22,8 @@ questpause-sentinel/
 │   │   ├── playerHistory.js             # /player-history
 │   │   ├── resolveIncident.js           # /resolve-incident (admin)
 │   │   ├── addWarning.js                # /add-warning (admin)
-│   │   └── resolveWarning.js            # /resolve-warning (admin)
+│   │   ├── resolveWarning.js            # /resolve-warning (admin)
+│   │   └── resolveReport.js             # /resolve-report (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -49,6 +50,14 @@ questpause-sentinel/
 - Reports saved to `reports.json` (gitignored)
 - Admin alert sent to `SENTINEL_REPORT_CHANNEL_ID` if configured
 - No automatic punishments — human admins review and decide
+
+## Stage 8 Additions
+
+- `/resolve-report` command (admin) — resolve open player reports with outcome choice and resolution notes
+- `resolveReport()` added to `reportLogger.js` — case-insensitive ID lookup, updates report status to Resolved
+- Outcome choices: No Action, Duplicate, Evidence Insufficient, Resolved Informally, Warning Issued, Converted To Incident
+- Optional `linked-incident-id` field to associate resolved report with an existing incident
+- No automatic incident or warning creation — human admins decide separately
 
 ## Environment Variables
 

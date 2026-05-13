@@ -37,7 +37,30 @@ async function addReport({ reportedPlayer, reporterId, reporterTag, game, issue,
   }
 }
 
+async function resolveReport(reportId, outcome, resolution, reviewedBy, linkedIncidentId) {
+  const all = await getAllReports();
+  if (!all) return { error: 'not_found' };
+
+  const idx = all.findIndex((r) => r.id.toLowerCase() === reportId.toLowerCase());
+  if (idx === -1) return { error: 'not_found' };
+
+  const report = all[idx];
+  if (report.status !== 'Open') return { error: 'already_resolved', report };
+
+  report.status = 'Resolved';
+  report.outcome = outcome;
+  report.resolution = resolution;
+  report.reviewedBy = reviewedBy;
+  report.reviewedAt = new Date().toISOString();
+  report.linkedIncidentId = linkedIncidentId || null;
+
+  await store.write('reports', all);
+  logger.info(`Report resolved: ${report.id} — outcome: ${outcome}`);
+  return { error: null, report };
+}
+
 module.exports = {
   addReport,
   getAllReports,
+  resolveReport,
 };
