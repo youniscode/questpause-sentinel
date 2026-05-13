@@ -19,7 +19,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | Persona Trigger Replies | Replies to harmless keywords with game-themed responses (Stage 12–14) |
 | Ambient Persona Messages | Periodic light messages in mapped game channels (Stage 15) |
 
-## Slash Commands (Stage 16)
+## Slash Commands (Stage 17)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -40,6 +40,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/ambient-toggle` | Enable or disable ambient persona messages | Yes |
 | `/ambient-cooldown` | Set ambient persona message cooldown (30–1440 min) | Yes |
 | `/sentinel-dashboard` | Show moderation dashboard overview | Yes |
+| `/player-profile` | View full moderation profile for a player | Yes |
 
 ## Active Systems
 
@@ -141,7 +142,8 @@ src/
 │   ├── ambientStatus.js             # /ambient-status
 │   ├── ambientToggle.js             # /ambient-toggle (admin)
 │   ├── ambientCooldown.js           # /ambient-cooldown (admin)
-│   └── sentinelDashboard.js         # /sentinel-dashboard (admin)
+│   ├── sentinelDashboard.js         # /sentinel-dashboard (admin)
+│   └── playerProfile.js             # /player-profile (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
@@ -150,7 +152,8 @@ src/
 │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │       ├── keywordGuard.js          # Serious keyword detection
 │       ├── alerts.js                # Admin alert sender
-│       └── dashboardService.js      # Dashboard data aggregation
+│       ├── dashboardService.js      # Dashboard data aggregation
+│       └── playerProfileService.js  # Player profile data service
 ├── modules/
 │   └── personas/
 │       ├── personaRouter.js             # Trigger matching + reply building

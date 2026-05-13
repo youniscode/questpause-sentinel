@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 16)
+# QUESTPAUSE Sentinel — Project Map (Stage 17)
 
 ```
 questpause-sentinel/
@@ -33,7 +33,8 @@ questpause-sentinel/
 │   │   ├── ambientStatus.js             # /ambient-status
 │   │   ├── ambientToggle.js             # /ambient-toggle (admin)
 │   │   ├── ambientCooldown.js           # /ambient-cooldown (admin)
-│   │   └── sentinelDashboard.js         # /sentinel-dashboard (admin)
+│   │   ├── sentinelDashboard.js         # /sentinel-dashboard (admin)
+│   │   └── playerProfile.js            # /player-profile (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -42,7 +43,8 @@ questpause-sentinel/
 │   │       ├── watchlistLogger.js       # Watchlist CRUD logic
 │   │       ├── keywordGuard.js          # Serious keyword detection
 │   │       ├── alerts.js                # Admin alert sender
-│   │       └── dashboardService.js      # Dashboard data aggregation
+│   │       ├── dashboardService.js      # Dashboard data aggregation
+│   │       └── playerProfileService.js  # Player profile data service
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -179,6 +181,19 @@ questpause-sentinel/
 - Embed color: green (0 open), yellow (1–4 open), red (5+ open)
 - If no open items: "No open moderation items. Network looks calm."
 - No changes to existing commands, keyword guard, or persona systems
+
+## Stage 17 Additions
+
+- `/player-profile` command (admin-only) — full moderation profile for a player
+- `playerProfileService.js` — searches incidents, reports, warnings, and watchlist for matching player records
+- Match is case-insensitive `includes` across `player`, `reportedPlayer` fields
+- Embed shows summary stats: incidents (total/open/resolved), reports (total/open/resolved), warnings (active/resolved), watchlist (active/removed)
+- Admin Signal field: 🟢 Calm (no open items), 🟡 Monitor (open report/watch), 🟠 Caution (active warning or 2+ open), 🔴 High Attention (critical severity or 3+ open)
+- Up to 8 latest activity items across all collections, sorted newest first
+- Each activity item shows: ID, type, game, status, severity, created date, short summary
+- If no records: "No moderation profile found for this player."
+- Read-only — does not create or modify any records
+- No changes to existing commands, keyword guard, persona, or dashboard systems
 
 ## Environment Variables
 
