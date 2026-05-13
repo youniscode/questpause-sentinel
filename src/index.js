@@ -46,6 +46,9 @@ async function init() {
     storeInterface.setImplementation(jsonStore);
     await storeInterface.init();
 
+    const channelConfig = require('./config/channels');
+    logger.info(`Channel config — monitored: ${channelConfig.monitoredChannelIds.size}, blocked channels: ${channelConfig.blockedChannelIds.size}, blocked categories: ${channelConfig.blockedCategoryIds.size}`);
+
     client.once('clientReady', () => readyEvent.execute(client));
     client.on('interactionCreate', (i) => interactionCreate.execute(i));
     client.on('messageCreate', (m) => messageCreate.execute(m));

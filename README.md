@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 10)
+## Current Commands (Stage 11)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -31,6 +31,23 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 |--------|-------------|
 | Keyword Guard | Monitors guild text channels for serious keywords and alerts admins via `SENTINEL_ALERT_CHANNEL_ID` |
 
+## Channel Configuration
+
+Control which channels Sentinel monitors with these optional environment variables:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `SENTINEL_MONITORED_CHANNEL_IDS` | Comma-separated list of channel IDs to monitor exclusively | `123,456,789` |
+| `SENTINEL_BLOCKED_CHANNEL_IDS` | Comma-separated list of channel IDs to always ignore | `111,222` |
+| `SENTINEL_BLOCKED_CATEGORY_IDS` | Comma-separated list of category IDs to always ignore | `333,444` |
+
+Behavior:
+- If `SENTINEL_MONITORED_CHANNEL_IDS` is set, Sentinel monitors **only** those channels
+- If `SENTINEL_MONITORED_CHANNEL_IDS` is empty, Sentinel monitors all guild text channels except blocked channels/categories
+- The alert and report channels (`SENTINEL_ALERT_CHANNEL_ID`, `SENTINEL_REPORT_CHANNEL_ID`) are always excluded
+- Bot messages and DMs are always ignored regardless of config
+- Leave any variable empty to disable its filtering
+
 ## Storage
 
 Data is stored as JSON files under `src/storage/data/`. The storage layer uses an abstract interface (`src/storage/storeInterface.js`) designed to be swapped for SQLite in a future stage without changing business logic.
@@ -49,8 +66,11 @@ Current collections:
    - `DISCORD_TOKEN` — bot token from Discord Developer Portal
    - `DISCORD_CLIENT_ID` — application client ID
    - `DISCORD_GUILD_ID` — set to your dev server ID for fast guild command deployment (leave empty for global commands)
-    - `SENTINEL_REPORT_CHANNEL_ID` — channel ID for player report alerts (optional)
-    - `SENTINEL_ALERT_CHANNEL_ID` — channel ID for keyword guard alerts (optional)
+   - `SENTINEL_REPORT_CHANNEL_ID` — channel ID for player report alerts (optional)
+   - `SENTINEL_ALERT_CHANNEL_ID` — channel ID for keyword guard alerts (optional)
+   - `SENTINEL_MONITORED_CHANNEL_IDS` — comma-separated channel IDs to monitor exclusively (optional)
+   - `SENTINEL_BLOCKED_CHANNEL_IDS` — comma-separated channel IDs to ignore (optional)
+   - `SENTINEL_BLOCKED_CATEGORY_IDS` — comma-separated category IDs to ignore (optional)
 4. `npm run deploy-commands` — register slash commands with Discord
 5. `npm start` — launch the bot
 
@@ -93,7 +113,8 @@ src/
 │       └── watchlist.json           # Player watchlist records
 ├── config/
 │   ├── index.js                     # Version and environment config
-│   └── keywords.js                  # Serious keyword list
+│   ├── keywords.js                  # Serious keyword list
+│   └── channels.js                  # Channel allow/block config
 └── utils/
     └── logger.js                    # Logging utility
 ```

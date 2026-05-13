@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const { KEYWORDS, COOLDOWN_MS } = require('../../config/keywords');
+const { monitoredChannelIds, blockedChannelIds, blockedCategoryIds } = require('../../config/channels');
 const { sendAlert } = require('./alerts');
 const logger = require('../../utils/logger');
 
@@ -26,8 +27,16 @@ async function checkMessage(message) {
   if (!message.guild) return;
   if (!message.content) return;
 
-  const content = message.content.toLowerCase();
   const alertChannelId = process.env.SENTINEL_ALERT_CHANNEL_ID;
+  const reportChannelId = process.env.SENTINEL_REPORT_CHANNEL_ID;
+
+  if (message.channel.id === alertChannelId) return;
+  if (message.channel.id === reportChannelId) return;
+  if (blockedChannelIds.has(message.channel.id)) return;
+  if (message.channel.parentId && blockedCategoryIds.has(message.channel.parentId)) return;
+  if (monitoredChannelIds.size > 0 && !monitoredChannelIds.has(message.channel.id)) return;
+
+  const content = message.content.toLowerCase();
 
   for (const keyword of KEYWORDS) {
     if (!content.includes(keyword)) continue;

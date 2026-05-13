@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 10)
+# QUESTPAUSE Sentinel — Project Map (Stage 11)
 
 ```
 questpause-sentinel/
@@ -46,7 +46,8 @@ questpause-sentinel/
 │   │       └── watchlist.json           # Player watchlist records
 │   ├── config/
 │   │   ├── index.js                     # Version and environment config
-│   │   └── keywords.js                  # Serious keyword list
+│   │   ├── keywords.js                  # Serious keyword list
+│   │   └── channels.js                  # Channel allow/block config
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
@@ -90,6 +91,16 @@ questpause-sentinel/
 - Bot ignores DMs and other bot messages
 - Added `GuildMessages` and `MessageContent` intents to client
 
+## Stage 11 Additions
+
+- `config/channels.js` — parses `SENTINEL_MONITORED_CHANNEL_IDS`, `SENTINEL_BLOCKED_CHANNEL_IDS`, `SENTINEL_BLOCKED_CATEGORY_IDS` env vars into Sets
+- `keywordGuard.js` now filters messages against channel allow/block lists before keyword scanning
+- If `SENTINEL_MONITORED_CHANNEL_IDS` is set, Sentinel monitors **only** those channels
+- If `SENTINEL_MONITORED_CHANNEL_IDS` is empty, all guild text channels are eligible (minus blocked)
+- `SENTINEL_ALERT_CHANNEL_ID` and `SENTINEL_REPORT_CHANNEL_ID` are always excluded from monitoring
+- Startup logs channel config summary: monitored count, blocked channel count, blocked category count
+- Empty env vars are handled gracefully — no crashes
+
 ## Environment Variables
 
 | Variable | Description |
@@ -99,3 +110,6 @@ questpause-sentinel/
 | `DISCORD_GUILD_ID` | Guild ID for dev (empty = global commands) |
 | `SENTINEL_REPORT_CHANNEL_ID` | Channel ID for report alerts (optional) |
 | `SENTINEL_ALERT_CHANNEL_ID` | Channel ID for keyword guard alerts (optional) |
+| `SENTINEL_MONITORED_CHANNEL_IDS` | Comma-separated channel IDs to monitor exclusively (optional) |
+| `SENTINEL_BLOCKED_CHANNEL_IDS` | Comma-separated channel IDs to ignore (optional) |
+| `SENTINEL_BLOCKED_CATEGORY_IDS` | Comma-separated category IDs to ignore (optional) |
