@@ -27,11 +27,14 @@ const linkReportIncident = require('./commands/linkReportIncident');
 const caseSummary = require('./commands/caseSummary');
 const exportCase = require('./commands/exportCase');
 const sentinelReportPanel = require('./commands/sentinelReportPanel');
+const aiStatus = require('./commands/aiStatus');
+const aiToggle = require('./commands/aiToggle');
+const aiCooldown = require('./commands/aiCooldown');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 const messageCreate = require('./events/messageCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary, exportCase, sentinelReportPanel]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary, exportCase, sentinelReportPanel, aiStatus, aiToggle, aiCooldown]);
 
 const client = new Client({
   intents: [
@@ -64,6 +67,9 @@ client.commands.set(linkReportIncident.data.name, linkReportIncident);
 client.commands.set(caseSummary.data.name, caseSummary);
 client.commands.set(exportCase.data.name, exportCase);
 client.commands.set(sentinelReportPanel.data.name, sentinelReportPanel);
+client.commands.set(aiStatus.data.name, aiStatus);
+client.commands.set(aiToggle.data.name, aiToggle);
+client.commands.set(aiCooldown.data.name, aiCooldown);
 
 async function init() {
   try {

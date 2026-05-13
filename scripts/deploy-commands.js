@@ -25,6 +25,9 @@ const commands = [
   require('../src/commands/caseSummary'),
   require('../src/commands/exportCase'),
   require('../src/commands/sentinelReportPanel'),
+  require('../src/commands/aiStatus'),
+  require('../src/commands/aiToggle'),
+  require('../src/commands/aiCooldown'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

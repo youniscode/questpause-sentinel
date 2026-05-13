@@ -19,7 +19,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | Persona Trigger Replies | Replies to harmless keywords with game-themed responses (Stage 12–14) |
 | Ambient Persona Messages | Periodic light messages in mapped game channels (Stage 15) |
 
-## Slash Commands (Stage 22)
+## Slash Commands (Stage 23)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -45,6 +45,9 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/case-summary` | View full summary of any moderation record by ID | Yes |
 | `/export-case` | Export a moderation record as a Markdown file | Yes |
 | `/sentinel-report-panel` | Post the player report panel with buttons in a channel | Yes |
+| `/ai-status` | Show AI Interactive Sentinel status | No |
+| `/ai-toggle` | Enable or disable AI Interactive Sentinel | Yes |
+| `/ai-cooldown` | Set AI response cooldown per user (5–300s) | Yes |
 
 ## Active Systems
 
@@ -52,6 +55,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 |--------|-------------|
 | Keyword Guard | Monitors guild text channels for serious keywords and alerts admins via `SENTINEL_ALERT_CHANNEL_ID` |
 | Game Personas | Game-themed personality replies when harmless trigger keywords are detected in game-specific channels |
+| AI Interactive Sentinel | AI-powered chat responses in approved channels (Stage 23, disabled by default) |
 
 ## Channel Configuration
 
@@ -151,7 +155,10 @@ src/
 │   ├── linkReportIncident.js        # /link-report-incident (admin)
 │   ├── caseSummary.js               # /case-summary (admin)
 │   ├── exportCase.js                # /export-case (admin)
-│   └── sentinelReportPanel.js       # /sentinel-report-panel (admin)
+│   ├── sentinelReportPanel.js       # /sentinel-report-panel (admin)
+│   ├── aiStatus.js                  # /ai-status
+│   ├── aiToggle.js                  # /ai-toggle (admin)
+│   └── aiCooldown.js                # /ai-cooldown (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
@@ -171,6 +178,12 @@ src/
 │       ├── ambientSettings.js           # Ambient runtime config (ambientSettings.json)
 │       ├── ambientState.js              # Ambient last-post timestamps (ambientState.json)
 │       └── ambientScheduler.js          # Ambient message timer + posting loop
+├── modules/
+│   └── ai/
+│       ├── aiRouter.js                  # AI message routing + cooldown
+│       ├── aiClient.js                  # Provider-agnostic AI client
+│       ├── sentinelSystemPrompt.js      # AI system prompt
+│       └── safetyRouter.js              # AI safety keyword check
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
@@ -185,6 +198,7 @@ src/
 │       └── ambientState.json        # Ambient last-post timestamps
 ├── config/
 │   ├── index.js                     # Version and environment config
+│   ├── ai.js                        # AI config from env vars
 │   ├── keywords.js                  # Serious keyword list
 │   ├── channels.js                  # Channel allow/block config
 │   ├── channelGames.js              # Channel-to-game mapping

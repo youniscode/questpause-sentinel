@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 22)
+# QUESTPAUSE Sentinel — Project Map (Stage 23)
 
 ```
 questpause-sentinel/
@@ -38,7 +38,10 @@ questpause-sentinel/
 │   │   ├── linkReportIncident.js       # /link-report-incident (admin)
 │   │   ├── caseSummary.js              # /case-summary (admin)
 │   │   ├── exportCase.js               # /export-case (admin)
-│   │   └── sentinelReportPanel.js      # /sentinel-report-panel (admin)
+│   │   ├── sentinelReportPanel.js      # /sentinel-report-panel (admin)
+│   │   ├── aiStatus.js                 # /ai-status
+│   │   ├── aiToggle.js                 # /ai-toggle (admin)
+│   │   └── aiCooldown.js               # /ai-cooldown (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -52,6 +55,11 @@ questpause-sentinel/
 │   │       ├── caseSummaryService.js    # Case summary lookup + linked data
 │   │       ├── exportCaseService.js     # Markdown export formatter
 │   │       └── reportPanel.js           # Report panel embed, modal, button handlers
+│   ├── ai/
+│   │   ├── aiRouter.js                  # AI message routing + cooldown
+│   │   ├── aiClient.js                  # Provider-agnostic AI client (OpenAI, Anthropic)
+│   │   ├── sentinelSystemPrompt.js      # AI system prompt
+│   │   └── safetyRouter.js              # AI safety keyword check → safe reply
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -74,6 +82,7 @@ questpause-sentinel/
 │   │       └── ambientState.json        # Ambient last-post timestamps
 │   ├── config/
 │   │   ├── index.js                     # Version and environment config
+│   │   ├── ai.js                        # AI config from env vars
 │   │   ├── keywords.js                  # Serious keyword list
 │   │   ├── channels.js                  # Channel allow/block config
 │   │   ├── channelGames.js              # Channel-to-game mapping
@@ -261,6 +270,21 @@ questpause-sentinel/
 - All existing commands including `/report-player` continue to work unchanged
 - No automatic punishment, no public accusations, no incident/warning creation from panel submissions
 
+## Stage 23 Additions
+
+- AI Interactive Sentinel foundation — provider-agnostic AI chat in approved channels (disabled by default)
+- `config/ai.js` — reads `AI_SENTINEL_ENABLED`, `SENTINEL_AI_CHANNEL_IDS`, `AI_PROVIDER`, `AI_MODEL`, `AI_API_KEY`, `AI_MAX_RESPONSE_CHARS`, `AI_COOLDOWN_SECONDS`
+- `aiRouter.js` — checks enabled state, channel allowlist, user cooldown, routes to safety or AI
+- `aiClient.js` — provider-agnostic interface with OpenAI (`gpt-4o-mini`) and Anthropic (`claude-3-haiku`) implementations; returns `null` if provider/key missing (log warning, no crash)
+- `sentinelSystemPrompt.js` — system prompt: Sentinel is a calm, helpful community assistant; must never reveal private records, accuse players, or make moderation decisions
+- `safetyRouter.js` — checks message against existing serious keyword list; if triggered, replies with safe redirect to report panel instead of AI
+- `messageCreate.js` now calls `aiRouter.handleMessage()` after keyword guard and persona replies
+- `/ai-status` (public) — shows enabled state, provider, model, channel count, cooldown, safety mode
+- `/ai-toggle` (admin) — enables/disables AI at runtime (note: applies until restart)
+- `/ai-cooldown` (admin) — sets per-user cooldown (5–300s)
+- `.env.example` updated with all 7 AI env vars, all disabled/empty by default
+- Bot does not crash if AI provider/key is missing — logs warning and skips AI responses
+
 ## Environment Variables
 
 | Variable | Description |
@@ -284,3 +308,10 @@ questpause-sentinel/
 | `SEVEN_DAYS_TO_DIE_CHANNEL_IDS` | Comma-separated channel IDs for 7 Days to Die persona (optional) |
 | `ENABLE_AMBIENT_PERSONA_MESSAGES` | Enable ambient persona messages (`true`/`false`, default `false`) |
 | `AMBIENT_PERSONA_COOLDOWN_MINUTES` | Cooldown between ambient messages in minutes (default 240) |
+| `AI_SENTINEL_ENABLED` | Enable AI Interactive Sentinel (`true`/`false`, default `false`) |
+| `SENTINEL_AI_CHANNEL_IDS` | Comma-separated channel IDs for AI chat (optional) |
+| `AI_PROVIDER` | AI provider (`openai`, `anthropic`, or leave empty) |
+| `AI_MODEL` | AI model name (e.g. `gpt-4o-mini`, `claude-3-haiku-20240307`) |
+| `AI_API_KEY` | API key for the AI provider |
+| `AI_MAX_RESPONSE_CHARS` | Maximum response length in characters (default 1200) |
+| `AI_COOLDOWN_SECONDS` | Per-user cooldown between AI responses (default 20) |
