@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 18)
+# QUESTPAUSE Sentinel — Project Map (Stage 19)
 
 ```
 questpause-sentinel/
@@ -35,7 +35,8 @@ questpause-sentinel/
 │   │   ├── ambientCooldown.js           # /ambient-cooldown (admin)
 │   │   ├── sentinelDashboard.js         # /sentinel-dashboard (admin)
 │   │   ├── playerProfile.js            # /player-profile (admin)
-│   │   └── linkReportIncident.js       # /link-report-incident (admin)
+│   │   ├── linkReportIncident.js       # /link-report-incident (admin)
+│   │   └── caseSummary.js              # /case-summary (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -45,7 +46,8 @@ questpause-sentinel/
 │   │       ├── keywordGuard.js          # Serious keyword detection
 │   │       ├── alerts.js                # Admin alert sender
 │   │       ├── dashboardService.js      # Dashboard data aggregation
-│   │       └── playerProfileService.js  # Player profile data service
+│   │       ├── playerProfileService.js  # Player profile data service
+│   │       └── caseSummaryService.js    # Case summary lookup + linked data
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -205,6 +207,22 @@ questpause-sentinel/
 - Confirmation embed shows: Report ID, Incident ID, Reported Player, Incident Player, Game, Linked By, Linked At
 - `playerProfile.js` now shows linked incident ID (`→ QP-INC-XXXX`) on report activity lines
 - No changes to existing commands, keyword guard, persona, ambient, dashboard, or profile systems
+
+## Stage 19 Additions
+
+- `/case-summary` command (admin-only) — view full summary of any moderation record by ID
+- `caseSummaryService.js` — detects record type by ID prefix (QP-REP, QP-INC, QP-WARN, QP-WATCH), fetches from matching collection
+- Embed shows: Record ID, Type, Status, Game, Severity, Created At, Player/Reported Player, Created By, Reporter
+- Shows main content (issue/note/reason), evidence if present, resolution/resolved/reviewed/removed details if applicable
+- If report has `linkedIncidentId`: fetches and displays linked incident summary (ID, Player, Status, Severity, Summary)
+- If incident: finds all reports linked to this incident and shows up to 5
+- Recommended Next Action field based on record type and status:
+  - Open report: review evidence, link to incident if needed, resolve
+  - Open incident: investigate, add warning/watchlist if needed, resolve when done
+  - Active warning: monitor or resolve later
+  - Active watchlist: monitor or unwatch later
+  - Resolved/removed: no open action required
+- No changes to existing commands, keyword guard, persona, ambient, dashboard, profile, or linking systems
 
 ## Environment Variables
 

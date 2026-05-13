@@ -22,6 +22,7 @@ const commands = [
   require('../src/commands/sentinelDashboard'),
   require('../src/commands/playerProfile'),
   require('../src/commands/linkReportIncident'),
+  require('../src/commands/caseSummary'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());
