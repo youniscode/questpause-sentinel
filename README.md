@@ -15,8 +15,9 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | Command | Description | Admin |
 |---------|-------------|-------|
 | `/sentinel-status` | Display Sentinel bot status and stats | No |
+| `/log-incident` | Log a new incident | Yes |
 
-*Additional commands (player reports, incident logging, warnings, watchlist) coming soon.*
+*Additional commands (player reports, warnings, watchlist) coming soon.*
 
 ## Setup
 
@@ -37,6 +38,9 @@ src/
 ├── index.js                  # Entry point
 ├── events/                   # Discord event handlers
 ├── commands/                 # Slash command implementations
+├── modules/
+│   └── moderation/           # Incident logging, moderation logic
+├── storage/                  # JSON data persistence (migratable to SQLite)
 ├── utils/                    # Logger and utilities
 └── config/                   # Configuration (version, environment)
 ```

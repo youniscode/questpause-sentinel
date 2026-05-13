@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Foundation)
+# QUESTPAUSE Sentinel — Project Map (Stage 2)
 
 ```
 questpause-sentinel/
@@ -16,17 +16,29 @@ questpause-sentinel/
 │   │   ├── ready.js                     # Bot ready event
 │   │   └── interactionCreate.js         # Slash command handler
 │   ├── commands/
-│   │   └── sentinelStatus.js            # /sentinel-status
+│   │   ├── sentinelStatus.js            # /sentinel-status
+│   │   └── logIncident.js               # /log-incident (admin)
+│   ├── modules/
+│   │   └── moderation/
+│   │       └── incidentLogger.js        # Incident create/read logic
+│   ├── storage/
+│   │   ├── storeInterface.js            # Abstract storage interface
+│   │   ├── jsonStore.js                 # JSON file implementation
+│   │   └── data/
+│   │       ├── .gitkeep
+│   │       └── incidents.json           # Incident records
 │   ├── config/
 │   │   └── index.js                     # Version and environment config
 │   └── utils/
 │       └── logger.js                    # Logging utility
 ```
 
-## Foundation State
+## Stage 2 Additions
 
-Current deployment includes only the `/sentinel-status` command.
-Persona system, moderation, storage, and remaining commands are planned for future iterations.
+- JSON storage layer with abstract interface (swappable for SQLite later)
+- `/log-incident` admin command with incident logging to file
+- Incident ID format: `QP-INC-XXXX`
+- Admin check via `Administrator` permission flag
 
 ## Environment Variables
 

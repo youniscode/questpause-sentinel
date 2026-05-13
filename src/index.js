@@ -3,11 +3,14 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const logger = require('./utils/logger');
 const config = require('./config');
+const storeInterface = require('./storage/storeInterface');
+const jsonStore = require('./storage/jsonStore');
 const sentinelStatus = require('./commands/sentinelStatus');
+const logIncident = require('./commands/logIncident');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 
-interactionCreate.registerCommands([sentinelStatus]);
+interactionCreate.registerCommands([sentinelStatus, logIncident]);
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -15,9 +18,13 @@ const client = new Client({
 
 client.commands = new Collection();
 client.commands.set(sentinelStatus.data.name, sentinelStatus);
+client.commands.set(logIncident.data.name, logIncident);
 
 async function init() {
   try {
+    storeInterface.setImplementation(jsonStore);
+    await storeInterface.init();
+
     client.once('clientReady', () => readyEvent.execute(client));
     client.on('interactionCreate', (i) => interactionCreate.execute(i));
 
