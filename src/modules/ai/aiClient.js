@@ -1,6 +1,13 @@
 const logger = require('../../utils/logger');
 const aiConfig = require('../../config/ai');
 
+function getFetch() {
+  if (typeof fetch !== 'undefined') return fetch;
+  if (typeof globalThis.fetch !== 'undefined') return globalThis.fetch;
+  logger.error('Global fetch is not available. Node.js 18+ is required for AI features.');
+  return null;
+}
+
 async function generateResponse(systemPrompt, userMessage) {
   const provider = aiConfig.provider;
   const key = aiConfig.apiKey;
@@ -30,7 +37,8 @@ async function generateResponse(systemPrompt, userMessage) {
 }
 
 async function callOpenAI(apiKey, model, systemPrompt, userMessage, maxChars) {
-  const { default: fetch } = await import('node-fetch');
+  const fetch = getFetch();
+  if (!fetch) return null;
 
   const body = {
     model: model || 'gpt-4o-mini',
@@ -61,7 +69,8 @@ async function callOpenAI(apiKey, model, systemPrompt, userMessage, maxChars) {
 }
 
 async function callAnthropic(apiKey, model, systemPrompt, userMessage, maxChars) {
-  const { default: fetch } = await import('node-fetch');
+  const fetch = getFetch();
+  if (!fetch) return null;
 
   const body = {
     model: model || 'claude-3-haiku-20240307',
@@ -94,7 +103,8 @@ async function callAnthropic(apiKey, model, systemPrompt, userMessage, maxChars)
 
 async function callOpenRouter(apiKey, model, systemPrompt, userMessage, maxChars) {
   try {
-    const { default: fetch } = await import('node-fetch');
+    const fetch = getFetch();
+    if (!fetch) return null;
 
     const body = {
       model: model || 'openrouter/free',
