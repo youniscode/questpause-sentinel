@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 3)
+# QUESTPAUSE Sentinel — Project Map (Stage 4)
 
 ```
 questpause-sentinel/
@@ -18,10 +18,11 @@ questpause-sentinel/
 │   ├── commands/
 │   │   ├── sentinelStatus.js            # /sentinel-status
 │   │   ├── logIncident.js               # /log-incident (admin)
-│   │   └── playerHistory.js             # /player-history
+│   │   ├── playerHistory.js             # /player-history
+│   │   └── resolveIncident.js           # /resolve-incident (admin)
 │   ├── modules/
 │   │   └── moderation/
-│   │       └── incidentLogger.js        # Incident create/read logic
+│   │       └── incidentLogger.js        # Incident CRUD logic
 │   ├── storage/
 │   │   ├── storeInterface.js            # Abstract storage interface
 │   │   ├── jsonStore.js                 # JSON file implementation
@@ -34,10 +35,11 @@ questpause-sentinel/
 │       └── logger.js                    # Logging utility
 ```
 
-## Stage 3 Additions
+## Stage 4 Additions
 
-- `/player-history` command — search incident history by player name (case-insensitive)
-- Ephemeral reply with totals (open/resolved), latest 5 incidents, empty-state message
+- `/resolve-incident` admin command — resolve open incidents with resolution notes
+- Case-insensitive ID lookup, empty/duplicate/not-found error handling
+- `resolveIncident()` function in incidentLogger with status, timestamp, and attribution
 
 ## Environment Variables
 

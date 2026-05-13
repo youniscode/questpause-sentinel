@@ -6,6 +6,7 @@ const commands = [
   require('../src/commands/sentinelStatus'),
   require('../src/commands/logIncident'),
   require('../src/commands/playerHistory'),
+  require('../src/commands/resolveIncident'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

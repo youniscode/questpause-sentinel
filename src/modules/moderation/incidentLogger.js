@@ -53,9 +53,30 @@ async function getAllIncidents() {
   return store.read('incidents');
 }
 
+async function resolveIncident(incidentId, resolution, resolvedBy) {
+  const all = await getAllIncidents();
+  if (!all) return { error: 'not_found' };
+
+  const idx = all.findIndex((inc) => inc.id.toLowerCase() === incidentId.toLowerCase());
+  if (idx === -1) return { error: 'not_found' };
+
+  const incident = all[idx];
+  if (incident.status === 'Resolved') return { error: 'already_resolved', incident };
+
+  incident.status = 'Resolved';
+  incident.resolvedAt = new Date().toISOString();
+  incident.resolvedBy = resolvedBy;
+  incident.resolution = resolution;
+
+  await store.write('incidents', all);
+  logger.info(`Incident resolved: ${incident.id} by ${resolvedBy}`);
+  return { error: null, incident };
+}
+
 module.exports = {
   logIncident,
   getIncidentById,
   getOpenIncidents,
   getAllIncidents,
+  resolveIncident,
 };

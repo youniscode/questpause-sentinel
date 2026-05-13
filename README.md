@@ -10,13 +10,14 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 3)
+## Current Commands (Stage 4)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
 | `/sentinel-status` | Display Sentinel bot status and stats | No |
 | `/log-incident` | Log a new incident | Yes |
 | `/player-history` | View incident history for a player | No |
+| `/resolve-incident` | Resolve an open incident | Yes |
 
 ## Storage
 
@@ -44,7 +45,8 @@ src/
 ├── commands/
 │   ├── sentinelStatus.js            # /sentinel-status
 │   ├── logIncident.js               # /log-incident (admin)
-│   └── playerHistory.js             # /player-history
+│   ├── playerHistory.js             # /player-history
+│   └── resolveIncident.js           # /resolve-incident (admin)
 ├── modules/
 │   └── moderation/
 │       └── incidentLogger.js        # Incident create/read logic
