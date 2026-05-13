@@ -10,10 +10,11 @@ const logIncident = require('./commands/logIncident');
 const playerHistory = require('./commands/playerHistory');
 const resolveIncident = require('./commands/resolveIncident');
 const addWarning = require('./commands/addWarning');
+const resolveWarning = require('./commands/resolveWarning');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning]);
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -25,6 +26,7 @@ client.commands.set(logIncident.data.name, logIncident);
 client.commands.set(playerHistory.data.name, playerHistory);
 client.commands.set(resolveIncident.data.name, resolveIncident);
 client.commands.set(addWarning.data.name, addWarning);
+client.commands.set(resolveWarning.data.name, resolveWarning);
 
 async function init() {
   try {

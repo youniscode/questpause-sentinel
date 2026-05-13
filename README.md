@@ -10,7 +10,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 - No public accusations
 - The bot detects, logs, alerts, and suggests — human admins decide
 
-## Current Commands (Stage 5)
+## Current Commands (Stage 6)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -19,6 +19,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/player-history` | View incident and warning history for a player | No |
 | `/resolve-incident` | Resolve an open incident | Yes |
 | `/add-warning` | Issue a warning to a player | Yes |
+| `/resolve-warning` | Resolve an active warning | Yes |
 
 ## Storage
 
@@ -52,18 +53,19 @@ src/
 │   ├── logIncident.js               # /log-incident (admin)
 │   ├── playerHistory.js             # /player-history
 │   ├── resolveIncident.js           # /resolve-incident (admin)
-│   └── addWarning.js                # /add-warning (admin)
+│   ├── addWarning.js                # /add-warning (admin)
+│   └── resolveWarning.js            # /resolve-warning (admin)
 ├── modules/
 │   └── moderation/
-│   ├── incidentLogger.js        # Incident CRUD logic
-│   └── warningLogger.js         # Warning CRUD logic
+│       ├── incidentLogger.js        # Incident CRUD logic
+│       └── warningLogger.js         # Warning CRUD logic
 ├── storage/
 │   ├── storeInterface.js            # Abstract storage interface
 │   ├── jsonStore.js                 # JSON file implementation
 │   └── data/
 │       ├── .gitkeep
-│   ├── incidents.json           # Incident records
-│   └── warnings.json            # Warning records
+│       ├── incidents.json           # Incident records
+│       └── warnings.json            # Warning records
 ├── config/
 │   └── index.js                     # Version and environment config
 └── utils/

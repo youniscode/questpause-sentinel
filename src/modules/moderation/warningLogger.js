@@ -50,9 +50,30 @@ async function getActiveWarnings() {
   return all.filter((w) => w.status === 'Active');
 }
 
+async function resolveWarning(warningId, resolution, resolvedBy) {
+  const all = await getAllWarnings();
+  if (!all) return { error: 'not_found' };
+
+  const idx = all.findIndex((w) => w.id.toLowerCase() === warningId.toLowerCase());
+  if (idx === -1) return { error: 'not_found' };
+
+  const warning = all[idx];
+  if (warning.status === 'Resolved') return { error: 'already_resolved', warning };
+
+  warning.status = 'Resolved';
+  warning.resolvedAt = new Date().toISOString();
+  warning.resolvedBy = resolvedBy;
+  warning.resolution = resolution;
+
+  await store.write('warnings', all);
+  logger.info(`Warning resolved: ${warning.id} by ${resolvedBy}`);
+  return { error: null, warning };
+}
+
 module.exports = {
   addWarning,
   getAllWarnings,
   getPlayerWarnings,
   getActiveWarnings,
+  resolveWarning,
 };

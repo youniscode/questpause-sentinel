@@ -31,6 +31,7 @@ async function execute(interaction) {
   const openCount = incMatches.filter((i) => i.status === 'Open').length;
   const resolvedCount = incMatches.filter((i) => i.status === 'Resolved').length;
   const activeWarnings = warnMatches.filter((w) => w.status === 'Active').length;
+  const resolvedWarnings = warnMatches.filter((w) => w.status === 'Resolved').length;
 
   const sortedInc = [...incMatches].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
@@ -51,6 +52,7 @@ async function execute(interaction) {
       { name: 'Open', value: String(openCount), inline: true },
       { name: 'Resolved', value: String(resolvedCount), inline: true },
       { name: 'Active Warnings', value: String(activeWarnings), inline: true },
+      { name: 'Resolved Warnings', value: String(resolvedWarnings), inline: true },
     )
     .setTimestamp();
 
