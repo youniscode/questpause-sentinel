@@ -24,6 +24,7 @@ const commands = [
   require('../src/commands/linkReportIncident'),
   require('../src/commands/caseSummary'),
   require('../src/commands/exportCase'),
+  require('../src/commands/sentinelReportPanel'),
 ];
 
 const commandData = commands.map((cmd) => cmd.data.toJSON());

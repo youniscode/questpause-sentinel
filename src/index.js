@@ -26,11 +26,12 @@ const playerProfile = require('./commands/playerProfile');
 const linkReportIncident = require('./commands/linkReportIncident');
 const caseSummary = require('./commands/caseSummary');
 const exportCase = require('./commands/exportCase');
+const sentinelReportPanel = require('./commands/sentinelReportPanel');
 const readyEvent = require('./events/ready');
 const interactionCreate = require('./events/interactionCreate');
 const messageCreate = require('./events/messageCreate');
 
-interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary, exportCase]);
+interactionCreate.registerCommands([sentinelStatus, logIncident, playerHistory, resolveIncident, addWarning, resolveWarning, reportPlayer, resolveReport, watchPlayer, unwatchPlayer, personaStatus, personaToggle, personaCooldown, ambientStatus, ambientToggle, ambientCooldown, sentinelDashboard, playerProfile, linkReportIncident, caseSummary, exportCase, sentinelReportPanel]);
 
 const client = new Client({
   intents: [
@@ -62,6 +63,7 @@ client.commands.set(playerProfile.data.name, playerProfile);
 client.commands.set(linkReportIncident.data.name, linkReportIncident);
 client.commands.set(caseSummary.data.name, caseSummary);
 client.commands.set(exportCase.data.name, exportCase);
+client.commands.set(sentinelReportPanel.data.name, sentinelReportPanel);
 
 async function init() {
   try {
@@ -91,7 +93,7 @@ async function init() {
     }
 
     client.once('clientReady', () => readyEvent.execute(client));
-    client.on('interactionCreate', (i) => interactionCreate.execute(i));
+    client.on('interactionCreate', (i) => interactionCreate.execute(i, client));
     client.on('messageCreate', (m) => messageCreate.execute(m));
 
     const token = process.env.DISCORD_TOKEN;

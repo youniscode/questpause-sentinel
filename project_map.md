@@ -1,4 +1,4 @@
-# QUESTPAUSE Sentinel — Project Map (Stage 21)
+# QUESTPAUSE Sentinel — Project Map (Stage 22)
 
 ```
 questpause-sentinel/
@@ -37,7 +37,8 @@ questpause-sentinel/
 │   │   ├── playerProfile.js            # /player-profile (admin)
 │   │   ├── linkReportIncident.js       # /link-report-incident (admin)
 │   │   ├── caseSummary.js              # /case-summary (admin)
-│   │   └── exportCase.js               # /export-case (admin)
+│   │   ├── exportCase.js               # /export-case (admin)
+│   │   └── sentinelReportPanel.js      # /sentinel-report-panel (admin)
 │   ├── modules/
 │   │   └── moderation/
 │   │       ├── incidentLogger.js        # Incident CRUD logic
@@ -49,7 +50,8 @@ questpause-sentinel/
 │   │       ├── dashboardService.js      # Dashboard data aggregation
 │   │       ├── playerProfileService.js  # Player profile data service
 │   │       ├── caseSummaryService.js    # Case summary lookup + linked data
-│   │       └── exportCaseService.js     # Markdown export formatter
+│   │       ├── exportCaseService.js     # Markdown export formatter
+│   │       └── reportPanel.js           # Report panel embed, modal, button handlers
 │   ├── personas/
 │   │   ├── personaRouter.js             # Trigger matching + reply building
 │   │   ├── triggerReplies.js            # Cooldown + env-check wrapper
@@ -245,6 +247,19 @@ questpause-sentinel/
 - Update workflow: `git pull` → `npm install --production` → `npm run deploy-commands` → `pm2 restart`
 - Backup warning: `src/storage/data/*.json` contains live moderation data and must be backed up before redeploy
 - No code changes — documentation only
+
+## Stage 22 Additions
+
+- `/sentinel-report-panel` command (admin-only) — posts a public report panel embed with buttons in a selected channel
+- `reportPanel.js` module — encapsulates panel embed, buttons, modal, and all interaction handlers
+- **🛡️ Report a Player** button opens a 5-field Discord modal (reported player, game/world, what happened, evidence link, extra info)
+- Modal submit saves report via existing `reportLogger.addReport()` with `QP-REP-XXXX` ID, status Open
+- Sends admin alert to `SENTINEL_REPORT_CHANNEL_ID` using the same alert embed style as `/report-player`
+- Replies ephemerally with confirmation: Report ID, Status Open, and "avoid public arguments" message
+- **📘 How Reports Work** button replies ephemerally with an explanation embed
+- `interactionCreate.js` updated to handle `isButton()` and `isModalSubmit()` interactions with stable custom IDs
+- All existing commands including `/report-player` continue to work unchanged
+- No automatic punishment, no public accusations, no incident/warning creation from panel submissions
 
 ## Environment Variables
 

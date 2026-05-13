@@ -19,7 +19,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | Persona Trigger Replies | Replies to harmless keywords with game-themed responses (Stage 12–14) |
 | Ambient Persona Messages | Periodic light messages in mapped game channels (Stage 15) |
 
-## Slash Commands (Stage 20)
+## Slash Commands (Stage 22)
 
 | Command | Description | Admin |
 |---------|-------------|-------|
@@ -44,6 +44,7 @@ Network safety, moderation, conflict tracking, player report, and personality bo
 | `/link-report-incident` | Link an existing report to an existing incident | Yes |
 | `/case-summary` | View full summary of any moderation record by ID | Yes |
 | `/export-case` | Export a moderation record as a Markdown file | Yes |
+| `/sentinel-report-panel` | Post the player report panel with buttons in a channel | Yes |
 
 ## Active Systems
 
@@ -149,7 +150,8 @@ src/
 │   ├── playerProfile.js             # /player-profile (admin)
 │   ├── linkReportIncident.js        # /link-report-incident (admin)
 │   ├── caseSummary.js               # /case-summary (admin)
-│   └── exportCase.js                # /export-case (admin)
+│   ├── exportCase.js                # /export-case (admin)
+│   └── sentinelReportPanel.js       # /sentinel-report-panel (admin)
 ├── modules/
 │   └── moderation/
 │       ├── incidentLogger.js        # Incident CRUD logic
