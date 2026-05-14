@@ -1,6 +1,6 @@
 const { KEYWORDS } = require('../../config/keywords');
 
-const SAFE_REPLY = 'I appreciate you reaching out, but this sounds like something that should be handled through our report system rather than discussed here. Please use the 🛡️ **Report a Player** button in the Sentinel panel or the `/report-player` command to submit a private report. Our admin team will review it manually. Please avoid public discussions about the issue.';
+const SAFE_REPLY = 'I hear you, and I understand this is important. For fairness, reports need to go through the right channel. Please head over to #🛡️・report-a-player and include the game/world, the player name (if you know it), what happened, and any screenshots or evidence you have. Our admin team reviews every report manually — no automated action is taken. Please avoid discussing details here in public chat.';
 
 function containsSeriousKeyword(text) {
   if (!text || typeof text !== 'string') return false;
